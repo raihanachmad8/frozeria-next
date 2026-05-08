@@ -1,6 +1,6 @@
 # Roadmap
 
-Current version: `v0.0.0`
+Current version: `v0.2.0`
 
 Final target: `v1.0.0` no later than `2026-05-10`
 
@@ -26,8 +26,9 @@ Roadmap -> GitHub Milestone -> GitHub Issue -> feature branch -> dev -> main -> 
 
 ## Immediate Next Steps
 
-- [ ] Push `dev` branch to GitHub.
-- [ ] Create GitHub milestones from `docs/MILESTONES.md`.
-- [ ] Create issues for `v0.1.0 - Project Setup`.
-- [ ] Scaffold the Next.js application.
-- [ ] Add GitHub Actions CI after the project scaffold exists.
+- [x] Scaffold the Next.js application.
+- [x] Add database schema foundation.
+- [x] Add database migration and seed script.
+- [ ] Configure a real `DATABASE_URL`.
+- [ ] Run database migration and seed against the target database.
+- [ ] Add GitHub Actions CI after the database foundation is verified.

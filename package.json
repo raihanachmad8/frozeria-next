@@ -1,6 +1,6 @@
 {
   "name": "frozeria-next",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,6 +9,10 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:reset": "tsx scripts/reset-db.ts",
+    "db:seed": "tsx scripts/seed.ts",
     "release:check": "pnpm type-check && pnpm lint && pnpm test && pnpm build"
   },
   "dependencies": {

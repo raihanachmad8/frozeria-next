@@ -89,6 +89,24 @@ S3_SECRET_ACCESS_KEY
 S3_FORCE_PATH_STYLE
 ```
 
+## Database Documentation
+
+Keep database documentation in sync with `src/server/db/schema.ts`.
+
+```text
+docs/DATABASE.md      human-readable schema notes
+docs/database.dbml    diagram-friendly DBML schema
+```
+
+When schema changes:
+
+- Update `src/server/db/schema.ts`.
+- Regenerate migrations with `pnpm db:generate`.
+- Rename generated migration files to a clear conventional name when needed.
+- Update `docs/DATABASE.md`.
+- Update `docs/database.dbml`.
+- Use `pnpm db:reset` only for local demo databases.
+
 ## Done Criteria
 
 Before finishing a feature:
