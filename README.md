@@ -1,6 +1,6 @@
 # Frozeria Next
 
-Frozeria Next is a frozen-food stock management application built for the BNSP practical assessment.
+Frozeria Next is a frozen-food stock management application built for a practical assessment demo.
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -13,7 +13,7 @@ Frozeria Next is a frozen-food stock management application built for the BNSP p
 
 Frozeria is designed to help store staff manage frozen-food inventory, categories, stock levels, item photos, and item details from a simple web dashboard.
 
-The project follows the BNSP assessment brief and targets a stable `v1.0.0` demo release by `2026-05-10`.
+The project follows the assessment brief and targets a stable `v1.0.0` demo release by `2026-05-10`.
 
 ## Planned Features
 
@@ -60,7 +60,7 @@ Current phase: repository planning and project setup.
 | `v0.6.0` | `2026-05-09` | Photo upload |
 | `v0.7.0` | `2026-05-10` | Help and demo polish |
 | `v0.8.0` | `2026-05-10` | CI and deployment |
-| `v1.0.0` | `2026-05-10` | BNSP demo release |
+| `v1.0.0` | `2026-05-10` | Demo release |
 
 Detailed planning:
 
@@ -132,6 +132,7 @@ S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
+NEXT_PUBLIC_APP_VERSION=0.0.0
 ```
 
 Storage drivers:

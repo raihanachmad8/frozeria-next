@@ -171,7 +171,7 @@ Due date:
 Description:
 
 ```text
-Complete the dashboard summary and stock visibility features required by the BNSP brief.
+Complete the dashboard summary and stock visibility features required by the assessment brief.
 
 Scope:
 - Add total items card.
@@ -255,7 +255,7 @@ Scope:
 Done when:
 - The help page contains all required instructions.
 - Participant identity is visible at the bottom of the help page.
-- Core screens are clean enough for BNSP demo.
+- Core screens are clean enough for the demo.
 ```
 
 ## Milestone 8
@@ -297,7 +297,7 @@ Done when:
 Title:
 
 ```text
-v1.0.0 - BNSP Demo Release
+v1.0.0 - Demo Release
 ```
 
 Due date:
@@ -309,7 +309,7 @@ Due date:
 Description:
 
 ```text
-Finalize the stable release for the BNSP practical assessment demo.
+Finalize the stable release for the practical assessment demo.
 
 Scope:
 - Verify every requirement from the PDF brief.
@@ -321,7 +321,7 @@ Scope:
 - Prepare GitHub release notes with demo summary.
 
 Done when:
-- All required BNSP features are complete.
+- All required assessment features are complete.
 - The production deployment can be opened and demonstrated.
 - The app works without a local server.
 - The v1.0.0 tag exists on main.

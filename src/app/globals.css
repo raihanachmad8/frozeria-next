@@ -1,0 +1,271 @@
+:root {
+  --background: #f5f7f4;
+  --foreground: #14211e;
+  --muted: #64706b;
+  --brand: #0f766e;
+  --border: #dbe4df;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--foreground);
+  background:
+    linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 36%),
+    linear-gradient(315deg, rgba(132, 204, 22, 0.12), transparent 38%),
+    var(--background);
+  font-family: var(--font-geist-sans), "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: transparent;
+}
+
+.app-header.ant-layout-header {
+  min-height: 60px;
+  height: 60px;
+  line-height: normal;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 170px;
+}
+
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: var(--brand);
+  border-radius: 7px;
+  font-size: 15px;
+}
+
+.brand-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.main-nav {
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 0;
+  overflow-x: auto;
+  border: 0;
+  background: transparent;
+}
+
+.nav-link {
+  height: 48px;
+  min-height: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  color: var(--muted);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.nav-link:hover {
+  color: var(--foreground);
+  background: #f1f5f9;
+}
+
+.nav-link.active {
+  color: var(--brand);
+  background: rgba(15, 118, 110, 0.08);
+}
+
+.header-actions {
+  min-width: 170px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.mobile-menu-button {
+  display: none;
+}
+
+.app-content {
+  width: min(1180px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 32px 0 36px;
+}
+
+.app-footer.ant-layout-footer {
+  padding: 0 24px 18px;
+  text-align: center;
+  background: transparent;
+}
+
+.app-footer .ant-typography {
+  font-size: 12px;
+}
+
+.page-heading {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-heading h1.ant-typography {
+  margin-bottom: 4px;
+  font-size: 38px;
+  line-height: 1.16;
+}
+
+.page-heading .ant-typography {
+  font-size: 16px;
+}
+
+.inventory-card {
+  margin-top: 16px;
+}
+
+.stat-card-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stat-icon,
+.placeholder-icon {
+  display: grid;
+  place-items: center;
+  color: var(--brand);
+  background: rgba(15, 118, 110, 0.1);
+}
+
+.stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.stat-icon-blue {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.stat-icon-amber {
+  color: #b45309;
+  background: rgba(180, 83, 9, 0.12);
+}
+
+.stat-icon-red {
+  color: #b91c1c;
+  background: rgba(185, 28, 28, 0.1);
+}
+
+.placeholder-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  font-size: 19px;
+}
+
+.table-toolbar {
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 190px;
+  gap: 10px;
+}
+
+.mobile-nav-drawer .main-nav {
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.mobile-nav-drawer .nav-link {
+  min-height: 38px;
+  padding: 0 12px;
+  justify-content: flex-start;
+}
+
+@media (max-width: 760px) {
+  .app-header.ant-layout-header {
+    min-height: 54px;
+    height: 54px;
+    padding: 0 14px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: inline-flex;
+  }
+
+  .header-actions {
+    min-width: 0;
+  }
+
+  .header-actions .ant-btn-primary {
+    display: none;
+  }
+
+  .app-content {
+    width: min(1180px, calc(100vw - 24px));
+    padding: 20px 0 28px;
+  }
+
+  .page-heading {
+    flex-direction: column;
+  }
+
+  .table-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
