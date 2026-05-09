@@ -330,16 +330,49 @@ a {
 
   .app-content {
     width: min(1180px, calc(100vw - 24px));
-    padding: 20px 0 28px;
+    padding: 16px 0 24px;
   }
 
   .page-heading {
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+    margin-bottom: 12px;
   }
 
   .page-heading h1.ant-typography {
-    font-size: 24px;
+    font-size: 18px;
+  }
+
+  .page-heading .ant-typography {
+    font-size: 13px;
+  }
+
+  .inventory-card {
+    margin-top: 12px;
+  }
+
+  .ant-card .ant-card-body {
+    padding: 14px;
+  }
+
+  .stat-card-content {
+    gap: 8px;
+  }
+
+  .stat-card-content h2.ant-typography {
+    margin-bottom: 0;
+    font-size: 22px;
+  }
+
+  .stat-card-content .ant-typography {
+    font-size: 13px;
+  }
+
+  .stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 15px;
   }
 
   .table-toolbar {
