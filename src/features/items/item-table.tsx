@@ -21,14 +21,26 @@ interface ItemTableProps {
 
 function getStockTag(item: Item) {
   if (item.stock <= 0) {
-    return <Tag color="red">{ITEM_PAGE_COPY.outOfStock}</Tag>;
+    return (
+      <Tag className="stock-status-tag" color="red">
+        {ITEM_PAGE_COPY.outOfStock}
+      </Tag>
+    );
   }
 
   if (item.stock < LOW_STOCK_THRESHOLD) {
-    return <Tag color="orange">{ITEM_PAGE_COPY.lowStock}</Tag>;
+    return (
+      <Tag className="stock-status-tag" color="orange">
+        {ITEM_PAGE_COPY.lowStock}
+      </Tag>
+    );
   }
 
-  return <Tag color="green">{ITEM_PAGE_COPY.available}</Tag>;
+  return (
+    <Tag className="stock-status-tag" color="green">
+      {ITEM_PAGE_COPY.available}
+    </Tag>
+  );
 }
 
 export function ItemTable({ items, pagination, loading, onPageChange, onEdit, onDelete }: ItemTableProps) {
@@ -50,10 +62,10 @@ export function ItemTable({ items, pagination, loading, onPageChange, onEdit, on
       dataIndex: "stock",
       width: 150,
       render: (_, item) => (
-        <Space orientation="vertical" size={2}>
-          <Typography.Text>{item.stock}</Typography.Text>
+        <div className="item-stock-cell">
+          <Typography.Text className="stock-value">{item.stock}</Typography.Text>
           {getStockTag(item)}
-        </Space>
+        </div>
       ),
     },
     {
@@ -78,7 +90,7 @@ export function ItemTable({ items, pagination, loading, onPageChange, onEdit, on
       key: "actions",
       width: 230,
       render: (_, item) => (
-        <Space size={6}>
+        <Space className="item-action-group" size={6}>
           <Button
             size="small"
             icon={<EyeOutlined />}
@@ -112,6 +124,8 @@ export function ItemTable({ items, pagination, loading, onPageChange, onEdit, on
   return (
     <Table
       rowKey="id"
+      className="inventory-table"
+      size="middle"
       loading={loading}
       dataSource={items}
       columns={columns}

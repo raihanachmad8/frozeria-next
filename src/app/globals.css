@@ -230,12 +230,56 @@ a {
   border-radius: 8px;
 }
 
-.item-row-low-stock td {
-  background: #fff7e6;
+.inventory-table .ant-table-thead > tr > th {
+  background: #f3f7f5;
+  font-weight: 700;
 }
 
-.item-row-out-of-stock td {
-  background: #fff1f0;
+.inventory-table .ant-table-tbody > tr > td {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-low-stock > td {
+  background: #fffaf0;
+  border-bottom-color: #f6e6c4;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-out-of-stock > td {
+  background: #fff7f7;
+  border-bottom-color: #f1d4d4;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-low-stock:hover > td {
+  background: #fff5df;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-out-of-stock:hover > td {
+  background: #fff0f0;
+}
+
+.item-stock-cell {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stock-value {
+  min-width: 28px;
+  font-weight: 600;
+}
+
+.stock-status-tag {
+  margin-inline-end: 0;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  padding-inline: 8px;
+}
+
+.item-action-group .ant-btn-sm {
+  padding-inline: 8px;
 }
 
 .category-toolbar {
