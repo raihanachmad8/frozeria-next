@@ -188,7 +188,7 @@ export function CategoryPage() {
           <Alert
             showIcon
             type="error"
-            message={CATEGORY_PAGE_COPY.errorTitle}
+            title={CATEGORY_PAGE_COPY.errorTitle}
             description={resolveErrorMessage(categoriesQuery.error)}
           />
         ) : (

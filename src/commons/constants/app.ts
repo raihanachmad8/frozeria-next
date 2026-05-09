@@ -1,6 +1,6 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Frozeria Stok";
 
-export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || "0.5.0";
+export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || "0.6.0";
 
 export const API_VERSION = "v1";
 

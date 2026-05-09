@@ -1,8 +1,17 @@
-import { apiDelete, apiGet, apiGetEnvelope, apiPost, apiPut } from "@/lib/api";
+import { apiDelete, apiGet, apiGetEnvelope, apiPost, apiPostForm, apiPut } from "@/lib/api";
 
-import type { CreateItemPayload, DeleteItemResult, Item, ItemListResult, ListItemsParams, UpdateItemPayload } from "./types";
+import type {
+  CreateItemPayload,
+  DeleteItemResult,
+  Item,
+  ItemListResult,
+  ListItemsParams,
+  UploadedItemPhoto,
+  UpdateItemPayload,
+} from "./types";
 
 const ITEM_ENDPOINT = "/api/v1/items";
+const ITEM_PHOTO_UPLOAD_ENDPOINT = "/api/v1/uploads/item-photo";
 
 function buildItemListPath(params?: ListItemsParams): string {
   const searchParams = new URLSearchParams();
@@ -67,4 +76,11 @@ export function updateItem(id: string, payload: UpdateItemPayload): Promise<Item
 
 export function deleteItem(id: string): Promise<DeleteItemResult> {
   return apiDelete<DeleteItemResult>(`${ITEM_ENDPOINT}/${id}`);
+}
+
+export function uploadItemPhoto(file: File): Promise<UploadedItemPhoto> {
+  const formData = new FormData();
+  formData.set("file", file);
+
+  return apiPostForm<UploadedItemPhoto>(ITEM_PHOTO_UPLOAD_ENDPOINT, formData);
 }

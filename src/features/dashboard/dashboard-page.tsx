@@ -52,9 +52,9 @@ export function DashboardPage() {
   const categoryId = searchParams.get("categoryId") ?? "";
   const currentPage = getPositiveNumber(searchParams.get("page"), DEFAULT_ITEM_PAGE);
   const currentPageSize = getPositiveNumber(searchParams.get("pageSize"), DEFAULT_ITEM_PAGE_SIZE);
-  const createModalOpen = searchParams.get("itemAction") === "create";
-  const [formMode, setFormMode] = useState<"edit" | null>(null);
+  const [formMode, setFormMode] = useState<"create" | "edit" | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [itemPhotoUploading, setItemPhotoUploading] = useState(false);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const itemsQuery = useItemsQuery({
     q: query || undefined,
@@ -67,7 +67,7 @@ export function DashboardPage() {
   const createItemMutation = useCreateItemMutation();
   const updateItemMutation = useUpdateItemMutation();
   const deleteItemMutation = useDeleteItemMutation();
-  const isSubmitting = createItemMutation.isPending || updateItemMutation.isPending;
+  const isSubmitting = createItemMutation.isPending || updateItemMutation.isPending || itemPhotoUploading;
   const items = itemsQuery.data?.items ?? [];
   const pagination = itemsQuery.data?.pagination ?? {
     currentPage: DEFAULT_ITEM_PAGE,
@@ -153,10 +153,7 @@ export function DashboardPage() {
 
   function openCreateModal() {
     setSelectedItem(null);
-    setFormMode(null);
-    setQueryParams((params) => {
-      params.set("itemAction", "create");
-    });
+    setFormMode("create");
   }
 
   function openEditModal(item: Item) {
@@ -169,9 +166,6 @@ export function DashboardPage() {
 
     setFormMode(null);
     setSelectedItem(null);
-    setQueryParams((params) => {
-      params.delete("itemAction");
-    });
   }
 
   async function handleFormSubmit(values: ItemFormValues) {
@@ -258,7 +252,7 @@ export function DashboardPage() {
         </div>
 
         {itemsQuery.isError ? (
-          <Alert showIcon type="error" message={ITEM_PAGE_COPY.errorTitle} description={resolveErrorMessage(itemsQuery.error)} />
+          <Alert showIcon type="error" title={ITEM_PAGE_COPY.errorTitle} description={resolveErrorMessage(itemsQuery.error)} />
         ) : (
           <ItemTable
             items={items}
@@ -272,7 +266,7 @@ export function DashboardPage() {
       </Card>
 
       <Modal
-        open={createModalOpen || formMode !== null}
+        open={formMode !== null}
         title={modalTitle}
         okText={ITEM_PAGE_COPY.saveText}
         cancelText={ITEM_PAGE_COPY.cancelText}
@@ -281,10 +275,12 @@ export function DashboardPage() {
         destroyOnHidden
       >
         <ItemForm
+          key={selectedItem?.id ?? formMode ?? "create"}
           formId={ITEM_FORM_ID}
           item={selectedItem}
           categories={categories}
           categoriesLoading={categoriesQuery.isLoading}
+          onUploadingChange={setItemPhotoUploading}
           onSubmit={handleFormSubmit}
         />
       </Modal>

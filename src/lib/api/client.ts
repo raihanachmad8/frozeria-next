@@ -37,13 +37,17 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 async function requestEnvelope<T>(path: string, init?: RequestInit): Promise<ApiSuccessResponse<T>> {
+  const headers = new Headers(init?.headers);
+  const isFormBody = typeof FormData !== "undefined" && init?.body instanceof FormData;
+
+  if (!isFormBody && !headers.has("content-type")) {
+    headers.set("content-type", "application/json");
+  }
+
   const response = await fetch(path, {
     ...init,
     cache: "no-store",
-    headers: {
-      "content-type": "application/json",
-      ...init?.headers,
-    },
+    headers,
   });
 
   const payload = (await response.json()) as unknown;
@@ -85,6 +89,13 @@ export function apiPost<T>(path: string, body?: unknown): Promise<T> {
   return requestJson<T>(path, {
     method: "POST",
     body: JSON.stringify(body ?? {}),
+  });
+}
+
+export function apiPostForm<T>(path: string, body: FormData): Promise<T> {
+  return requestJson<T>(path, {
+    method: "POST",
+    body,
   });
 }
 

@@ -12,6 +12,7 @@ next-env.d.ts
 # production
 dist/
 build/
+public/uploads/
 
 # testing
 coverage/
