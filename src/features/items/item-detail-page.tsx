@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowLeftOutlined, InboxOutlined, PictureOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Descriptions, Image, Skeleton, Space, Tag, Typography } from "antd";
+import { ArrowLeftOutlined, PictureOutlined } from "@ant-design/icons";
+import { Alert, Button, Card, Image, Skeleton, Space, Tag, Typography } from "antd";
 
 import { ROUTES } from "@/commons/constants";
 import { ApiClientError } from "@/lib/api";
+import type { Item } from "@/modules/items";
 import { useItemQuery } from "@/modules/items";
 import { formatRupiah } from "@/utils";
 
@@ -28,6 +29,27 @@ function formatDate(value: string): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
+}
+
+function getStockStatus(item: Item) {
+  if (item.stock <= 0) {
+    return <Tag color="red">{ITEM_PAGE_COPY.outOfStock}</Tag>;
+  }
+
+  if (item.stock < 20) {
+    return <Tag color="orange">{ITEM_PAGE_COPY.lowStock}</Tag>;
+  }
+
+  return <Tag color="green">{ITEM_PAGE_COPY.available}</Tag>;
+}
+
+function DetailMetric({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="item-detail-metric">
+      <Typography.Text type="secondary">{label}</Typography.Text>
+      <Typography.Text strong>{value}</Typography.Text>
+    </div>
+  );
 }
 
 export function ItemDetailPage({ id }: ItemDetailPageProps) {
@@ -54,65 +76,45 @@ export function ItemDetailPage({ id }: ItemDetailPageProps) {
         <Alert
           showIcon
           type="error"
-          message={ITEM_PAGE_COPY.errorTitle}
+          title={ITEM_PAGE_COPY.errorTitle}
           description={resolveErrorMessage(itemQuery.error)}
         />
       ) : item ? (
-        <Card
-          className="inventory-card"
-          title={
-            <Space>
-              <InboxOutlined />
-              {item.name}
-            </Space>
-          }
-        >
-          <div className="item-detail-media">
+        <Card className="inventory-card item-detail-card">
+          <div className="item-detail-summary">
             {item.photoUrl ? (
-              <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={220} height={160} />
+              <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={112} height={112} />
             ) : (
               <div className="item-photo-placeholder" aria-label="Foto barang belum tersedia">
                 <PictureOutlined />
-                <Typography.Text type="secondary">Foto belum tersedia</Typography.Text>
               </div>
             )}
+            <div className="item-detail-title">
+              <Typography.Title level={2}>{item.name}</Typography.Title>
+              <Space size={6} wrap>
+                <Tag>{item.category?.name ?? ITEM_PAGE_COPY.noCategory}</Tag>
+                {getStockStatus(item)}
+              </Space>
+            </div>
           </div>
 
-          <Descriptions bordered column={{ xs: 1, md: 2 }}>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.name}>{item.name}</Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.category}>
-              {item.category?.name ?? ITEM_PAGE_COPY.noCategory}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.stock}>
-              <Space>
-                {item.stock}
-                {item.stock <= 0 ? <Tag color="red">{ITEM_PAGE_COPY.outOfStock}</Tag> : null}
-                {item.stock > 0 && item.stock <= item.minimumStock ? <Tag color="orange">{ITEM_PAGE_COPY.lowStock}</Tag> : null}
-              </Space>
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.minimumStock}>{item.minimumStock}</Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.unit}>{item.unit}</Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.packageSize}>
-              {item.packageSize ?? ITEM_PAGE_COPY.noValue}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.purchasePrice}>
-              {formatRupiah(item.purchasePrice)}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.sellingPrice}>
-              {formatRupiah(item.sellingPrice)}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.storageLocation}>
-              {item.storageLocation ?? ITEM_PAGE_COPY.noValue}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.photoUrl}>
-              {item.photoUrl ?? ITEM_PAGE_COPY.noValue}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.description}>
+          <div className="item-detail-grid">
+            <DetailMetric label={ITEM_DETAIL_COPY.stock} value={`${item.stock} ${item.unit}`} />
+            <DetailMetric label={ITEM_DETAIL_COPY.minimumStock} value={`${item.minimumStock} ${item.unit}`} />
+            <DetailMetric label={ITEM_DETAIL_COPY.sellingPrice} value={formatRupiah(item.sellingPrice)} />
+            <DetailMetric label={ITEM_DETAIL_COPY.purchasePrice} value={formatRupiah(item.purchasePrice)} />
+            <DetailMetric label={ITEM_DETAIL_COPY.packageSize} value={item.packageSize ?? ITEM_PAGE_COPY.noValue} />
+            <DetailMetric label={ITEM_DETAIL_COPY.storageLocation} value={item.storageLocation ?? ITEM_PAGE_COPY.noValue} />
+            <DetailMetric label={ITEM_DETAIL_COPY.createdAt} value={formatDate(item.createdAt)} />
+            <DetailMetric label={ITEM_DETAIL_COPY.updatedAt} value={formatDate(item.updatedAt)} />
+          </div>
+
+          <div className="item-detail-description">
+            <Typography.Text type="secondary">{ITEM_DETAIL_COPY.description}</Typography.Text>
+            <Typography.Paragraph>
               {item.description ?? ITEM_PAGE_COPY.noValue}
-            </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.createdAt}>{formatDate(item.createdAt)}</Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.updatedAt}>{formatDate(item.updatedAt)}</Descriptions.Item>
-          </Descriptions>
+            </Typography.Paragraph>
+          </div>
         </Card>
       ) : null}
     </>

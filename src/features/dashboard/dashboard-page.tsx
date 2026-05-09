@@ -259,7 +259,7 @@ export function DashboardPage() {
         </div>
 
         {itemsQuery.isError ? (
-          <Alert showIcon type="error" message={ITEM_PAGE_COPY.errorTitle} description={resolveErrorMessage(itemsQuery.error)} />
+          <Alert showIcon type="error" title={ITEM_PAGE_COPY.errorTitle} description={resolveErrorMessage(itemsQuery.error)} />
         ) : (
           <ItemTable
             items={items}
