@@ -266,6 +266,8 @@ export function DashboardPage() {
       </Card>
 
       <Modal
+        className="item-form-modal"
+        rootClassName="item-form-modal-root"
         open={formMode !== null}
         title={modalTitle}
         okText={ITEM_PAGE_COPY.saveText}
@@ -273,6 +275,7 @@ export function DashboardPage() {
         okButtonProps={{ htmlType: "submit", form: ITEM_FORM_ID, loading: isSubmitting }}
         onCancel={closeFormModal}
         destroyOnHidden
+        width={720}
       >
         <ItemForm
           key={selectedItem?.id ?? formMode ?? "create"}

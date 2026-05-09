@@ -131,6 +131,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
 
   return (
     <Form
+      className="item-form"
       id={formId}
       form={form}
       layout="vertical"
