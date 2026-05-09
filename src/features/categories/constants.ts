@@ -22,6 +22,8 @@ export const CATEGORY_PAGE_COPY = {
   namePlaceholder: "Contoh: Ayam",
   descriptionLabel: "Deskripsi",
   descriptionPlaceholder: "Catatan singkat untuk kategori ini",
+  nameHelp: "Gunakan nama singkat yang mudah dipakai untuk filter barang.",
+  descriptionHelp: "Opsional. Isi jika kategori perlu keterangan tambahan untuk staf.",
   searchLabel: "Pencarian kategori",
   showingItems: "Menampilkan",
   itemSuffix: "kategori",
