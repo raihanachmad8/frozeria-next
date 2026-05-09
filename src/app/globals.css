@@ -218,6 +218,13 @@ a {
   gap: 10px;
 }
 
+.category-toolbar {
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: minmax(220px, 420px);
+  gap: 10px;
+}
+
 .mobile-nav-drawer .main-nav {
   width: 100%;
   flex-direction: column;
@@ -266,6 +273,10 @@ a {
   }
 
   .table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .category-toolbar {
     grid-template-columns: 1fr;
   }
 }
