@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 
 import { API_VERSION } from "@/commons/constants";
-import type { ApiErrorDetails, ApiErrorResponse, ApiMeta, ApiSuccessResponse } from "@/commons/types";
+import type { ApiErrorDetails, ApiErrorResponse, ApiMeta, ApiPaginationMeta, ApiSuccessResponse } from "@/commons/types";
 
 export interface DataResponseOptions {
   status?: number;
   message?: string;
   requestId?: string;
+  pagination?: ApiPaginationMeta;
 }
 
 export interface ErrorResponseOptions {
@@ -30,11 +31,18 @@ const STATUS_ERROR_CODES: Record<number, string> = {
   500: "INTERNAL_SERVER_ERROR",
 };
 
-function buildMeta(requestId: string): ApiMeta {
+interface ApiHandlerResult<T> {
+  data: T;
+  pagination?: ApiPaginationMeta;
+  type: "api-handler-result";
+}
+
+function buildMeta(requestId: string, pagination?: ApiPaginationMeta): ApiMeta {
   return {
     version: API_VERSION,
     request_id: requestId,
     timestamp: new Date().toISOString(),
+    ...(pagination ? { pagination } : {}),
   };
 }
 
@@ -63,7 +71,7 @@ export function dataResponse<T>(data: T, options?: DataResponseOptions): NextRes
     status,
     message: options?.message ?? (status === 201 ? DEFAULT_CREATED_MESSAGE : DEFAULT_SUCCESS_MESSAGE),
     data,
-    meta: buildMeta(requestId),
+    meta: buildMeta(requestId, options?.pagination),
   };
 
   return buildJsonResponse(payload, status, requestId);
@@ -83,4 +91,22 @@ export function errorResponse(options?: ErrorResponseOptions): NextResponse<ApiE
   };
 
   return buildJsonResponse(payload, status, requestId);
+}
+
+export function apiResult<T>(data: T, options?: { pagination?: ApiPaginationMeta }): ApiHandlerResult<T> {
+  return {
+    type: "api-handler-result",
+    data,
+    pagination: options?.pagination,
+  };
+}
+
+export function isApiHandlerResult<T>(value: unknown): value is ApiHandlerResult<T> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    value.type === "api-handler-result" &&
+    "data" in value
+  );
 }
