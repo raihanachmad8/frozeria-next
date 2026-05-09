@@ -79,12 +79,41 @@ src/commons/constants/routes.ts
 
 All application API routes use `/api/v1`.
 
-Response shapes:
+All backend responses must use the standard API envelope documented in `docs/API_CONTRACTS.md`.
+
+Success response:
 
 ```ts
-{ data: value }
-{ data: values, meta: { page, pageSize, total, pageCount } }
-{ error: message }
+{
+  success: true;
+  status: number;
+  message: string;
+  data: T;
+  meta: {
+    version: string;
+    request_id: string;
+    timestamp: string;
+  };
+}
+```
+
+Error response:
+
+```ts
+{
+  success: false;
+  status: number;
+  message: string;
+  data: null;
+  meta: {
+    version: string;
+    request_id: string;
+    timestamp: string;
+  };
+  errors: {
+    code: string;
+  };
+}
 ```
 
 ## State Management
