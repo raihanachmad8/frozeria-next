@@ -285,7 +285,7 @@ a {
 .category-toolbar {
   margin-bottom: 14px;
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto;
+  grid-template-columns: minmax(220px, 1fr);
   align-items: center;
   gap: 10px;
 }
@@ -353,6 +353,26 @@ a {
 
   .ant-card .ant-card-body {
     padding: 14px;
+  }
+
+  .inventory-card .ant-card-head {
+    min-height: auto;
+    padding: 12px 14px 0;
+    border-bottom: 0;
+  }
+
+  .inventory-card .ant-card-head-wrapper {
+    display: block;
+  }
+
+  .inventory-card .ant-card-extra {
+    width: 100%;
+    margin-inline-start: 0;
+    padding: 0;
+  }
+
+  .inventory-card .ant-card-extra .ant-btn {
+    width: 100%;
   }
 
   .stat-card-content {
