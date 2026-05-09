@@ -9,6 +9,11 @@ import { createCategory, deleteCategory, getCategory, listCategories, updateCate
 import { categoryKeys } from "./keys";
 import type { CreateCategoryPayload, ListCategoriesParams, UpdateCategoryPayload } from "./types";
 
+interface UseCategoryQueryOptions {
+  id: string;
+  enabled?: boolean;
+}
+
 function useInvalidateCategoryDependencies() {
   const queryClient = useQueryClient();
 
@@ -27,7 +32,7 @@ export function useCategoriesQuery(params: ListCategoriesParams = {}) {
   });
 }
 
-export function useCategoryQuery(id: string, enabled = true) {
+export function useCategoryQuery({ id, enabled = true }: UseCategoryQueryOptions) {
   return useQuery({
     queryKey: categoryKeys.detail(id),
     queryFn: () => getCategory(id),
