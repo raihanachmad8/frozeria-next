@@ -249,6 +249,21 @@ a {
   font-size: 12px;
 }
 
+.item-photo-upload-button {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  color: var(--foreground);
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+  font-size: 14px;
+  line-height: 1;
+}
+
 .item-detail-image {
   object-fit: cover;
   border: 1px solid var(--border);

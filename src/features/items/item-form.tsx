@@ -1,7 +1,7 @@
 "use client";
 
 import { PictureOutlined, PlusOutlined } from "@ant-design/icons";
-import { App as AntApp, Button, Form, Input, InputNumber, Select, Typography, Upload } from "antd";
+import { App as AntApp, Form, Input, InputNumber, Select, Typography, Upload } from "antd";
 import type { UploadFile, UploadProps } from "antd";
 import { useEffect, useState } from "react";
 
@@ -175,7 +175,10 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
           </p>
           <Typography.Text strong>{ITEM_FORM_COPY.photoUploadText}</Typography.Text>
           <Typography.Paragraph type="secondary">{ITEM_FORM_COPY.photoUploadHint}</Typography.Paragraph>
-          <Button icon={<PlusOutlined />}>{ITEM_FORM_COPY.photoUploadButton}</Button>
+          <span className="item-photo-upload-button">
+            <PlusOutlined />
+            {ITEM_FORM_COPY.photoUploadButton}
+          </span>
         </Upload.Dragger>
       </Form.Item>
 
