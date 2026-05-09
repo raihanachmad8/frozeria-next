@@ -1,6 +1,6 @@
 # Roadmap
 
-Current version: `v0.2.0`
+Current version: `v0.4.0`
 
 Final target: `v1.0.0` no later than `2026-05-10`
 

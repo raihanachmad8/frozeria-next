@@ -60,7 +60,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <div className="header-actions">
           <Button className="mobile-menu-button" icon={<MenuOutlined />} onClick={() => setMobileNavOpen(true)} />
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button type="primary" icon={<PlusOutlined />} href={ROUTES.dashboardCreateItem}>
             {APP_ACTIONS.addItem}
           </Button>
         </div>
