@@ -99,6 +99,7 @@ Expected result:
 - Item create, edit, detail, delete, and photo upload work.
 - Category create, edit, and delete work.
 - Help page displays participant identity from Vercel environment variables.
+- `pnpm test:e2e:smoke` passes against the configured demo environment.
 - Ready health check is successful.
 - `main` deployment is opened and smoke-tested after merge.
 

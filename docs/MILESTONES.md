@@ -312,13 +312,13 @@ Description:
 Add final release confidence before promoting dev to main.
 
 Scope:
-- Add minimal Playwright smoke E2E coverage.
+- Add per-module Playwright smoke E2E coverage.
 - Add server-side logger helper.
 - Add PDF requirements checklist.
 - Verify manual demo-readiness items.
 
 Done when:
-- Smoke E2E checks can be run against the configured demo environment.
+- Per-module smoke E2E checks can be run against the configured demo environment.
 - Logger is available for API and service failures.
 - PDF requirements are mapped to automated or manual verification.
 ```

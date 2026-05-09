@@ -168,7 +168,20 @@ pnpm test
 pnpm build
 ```
 
-Run the final smoke E2E check after the demo database is configured and seeded:
+Test layout:
+
+```text
+tests/unit  Vitest unit and backend contract tests
+tests/e2e   Playwright browser smoke tests by module
+```
+
+Run unit/backend tests:
+
+```bash
+pnpm test:unit
+```
+
+Run final per-module smoke E2E checks after the demo database is configured and seeded:
 
 ```bash
 pnpm test:e2e:smoke
