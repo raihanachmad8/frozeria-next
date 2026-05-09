@@ -4,7 +4,7 @@ import { ZodError } from "zod";
 import type { ApiErrorDetails } from "@/commons/types";
 
 import { AppError } from "./errors";
-import { dataResponse, errorResponse } from "./response";
+import { dataResponse, errorResponse, isApiHandlerResult } from "./response";
 
 interface HandleApiOptions {
   status?: number;
@@ -27,7 +27,18 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
   const requestId = options?.request?.headers.get("x-request-id")?.trim() || undefined;
 
   try {
-    return dataResponse(await handler(), { status: options?.status, message: options?.message, requestId });
+    const result = await handler();
+
+    if (isApiHandlerResult<T>(result)) {
+      return dataResponse(result.data, {
+        status: options?.status,
+        message: options?.message,
+        requestId,
+        pagination: result.pagination,
+      });
+    }
+
+    return dataResponse(result, { status: options?.status, message: options?.message, requestId });
   } catch (error) {
     if (error instanceof AppError) {
       return errorResponse({

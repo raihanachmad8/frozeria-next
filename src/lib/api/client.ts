@@ -32,6 +32,11 @@ function isApiErrorResponse(payload: unknown): payload is ApiErrorResponse {
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const payload = await requestEnvelope<T>(path, init);
+  return payload.data;
+}
+
+async function requestEnvelope<T>(path: string, init?: RequestInit): Promise<ApiSuccessResponse<T>> {
   const response = await fetch(path, {
     ...init,
     cache: "no-store",
@@ -52,14 +57,28 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   if (isApiSuccessResponse<T>(payload)) {
-    return payload.data;
+    return payload;
   }
 
-  return payload as T;
+  return {
+    success: true,
+    status: response.status,
+    message: "Request completed successfully.",
+    data: payload as T,
+    meta: {
+      version: "v1",
+      request_id: "",
+      timestamp: new Date().toISOString(),
+    },
+  };
 }
 
 export function apiGet<T>(path: string): Promise<T> {
   return requestJson<T>(path);
+}
+
+export function apiGetEnvelope<T>(path: string): Promise<ApiSuccessResponse<T>> {
+  return requestEnvelope<T>(path);
 }
 
 export function apiPost<T>(path: string, body?: unknown): Promise<T> {

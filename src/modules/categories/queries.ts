@@ -29,6 +29,7 @@ export function useCategoriesQuery(params: ListCategoriesParams = {}) {
   return useQuery({
     queryKey: categoryKeys.list(params),
     queryFn: () => listCategories(params),
+    placeholderData: (previousData) => previousData,
   });
 }
 

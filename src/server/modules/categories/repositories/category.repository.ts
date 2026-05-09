@@ -1,10 +1,12 @@
-import { and, asc, eq, ilike, ne } from "drizzle-orm";
+import { and, asc, count, eq, ilike, ne } from "drizzle-orm";
 
 import { categories, type Category, type NewCategory } from "@/server/db/schema";
 import { requireDb } from "@/server/db/client";
 
 export interface ListCategoriesParams {
   q?: string;
+  page: number;
+  pageSize: number;
 }
 
 export interface UpdateCategoryRecord {
@@ -13,14 +15,25 @@ export interface UpdateCategoryRecord {
   updatedAt: Date;
 }
 
-export async function listCategoryRecords(params: ListCategoriesParams = {}): Promise<Category[]> {
+export async function listCategoryRecords(params: ListCategoriesParams): Promise<Category[]> {
   const db = requireDb();
+  const where = params.q ? ilike(categories.name, `%${params.q}%`) : undefined;
+  const offset = (params.page - 1) * params.pageSize;
 
   return db
     .select()
     .from(categories)
-    .where(params.q ? ilike(categories.name, `%${params.q}%`) : undefined)
-    .orderBy(asc(categories.name));
+    .where(where)
+    .orderBy(asc(categories.name))
+    .limit(params.pageSize)
+    .offset(offset);
+}
+
+export async function countCategoryRecords(params: Pick<ListCategoriesParams, "q"> = {}): Promise<number> {
+  const db = requireDb();
+  const where = params.q ? ilike(categories.name, `%${params.q}%`) : undefined;
+  const records = await db.select({ value: count() }).from(categories).where(where);
+  return records[0]?.value ?? 0;
 }
 
 export async function findCategoryRecordById(id: string): Promise<Category | null> {
