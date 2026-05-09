@@ -2,14 +2,13 @@
 
 import {
   AlertOutlined,
-  AppstoreOutlined,
   FolderOpenOutlined,
   InboxOutlined,
   PlusOutlined,
   SearchOutlined,
   StopOutlined,
 } from "@ant-design/icons";
-import { Alert, App as AntApp, Button, Card, Col, Input, Modal, Row, Select, Space, Typography } from "antd";
+import { Alert, App as AntApp, Button, Card, Col, Input, Modal, Row, Select, Typography } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -227,12 +226,6 @@ export function DashboardPage() {
 
       <Card
         className="inventory-card"
-        title={
-          <Space>
-            <AppstoreOutlined />
-            {DASHBOARD_COPY.inventoryTitle}
-          </Space>
-        }
         extra={
           <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
             {ITEM_PAGE_COPY.addItem}
