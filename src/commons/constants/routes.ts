@@ -1,5 +1,7 @@
 export const ROUTES = {
   dashboard: "/",
+  dashboardCreateItem: "/?itemAction=create",
+  itemDetail: (id: string) => `/items/${id}`,
   itemsNew: "/items/new",
   categories: "/categories",
   categoryNew: "/categories/new",
@@ -13,4 +15,3 @@ export const API_ENDPOINTS = {
   healthLive: "/api/v1/health/live",
   healthReady: "/api/v1/health/ready",
 } as const;
-

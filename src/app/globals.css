@@ -218,6 +218,18 @@ a {
   gap: 10px;
 }
 
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.item-detail-image {
+  margin-bottom: 16px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .category-toolbar {
   margin-bottom: 14px;
   display: grid;
@@ -279,5 +291,10 @@ a {
 
   .category-toolbar {
     grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 }

@@ -3,34 +3,210 @@
 import {
   AlertOutlined,
   AppstoreOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
   FolderOpenOutlined,
   InboxOutlined,
+  PlusOutlined,
   SearchOutlined,
   StopOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Input, Row, Select, Space, Table, Tag, Typography } from "antd";
+import { Alert, App as AntApp, Button, Card, Col, Input, Modal, Row, Select, Space, Typography } from "antd";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import { StatCard } from "@/components/shared/stat-card";
+import { ApiClientError } from "@/lib/api";
+import type { Item } from "@/modules/items";
+import { useCategoriesQuery } from "@/modules/categories";
+import { useCreateItemMutation, useDeleteItemMutation, useItemsQuery, useUpdateItemMutation } from "@/modules/items";
 
 import {
-  DASHBOARD_ACTIONS,
-  DASHBOARD_CATEGORY_OPTIONS,
   DASHBOARD_COPY,
   type DashboardStatPreview,
-  DASHBOARD_ITEM_PREVIEWS,
-  DASHBOARD_TABLE_COPY,
 } from "./constants";
+import { ItemForm, type ItemFormValues } from "@/features/items/item-form";
+import { ItemTable } from "@/features/items/item-table";
+import { ITEM_PAGE_COPY } from "@/features/items/constants";
+
+const ITEM_FORM_ID = "item-form";
+const ITEM_SEARCH_DEBOUNCE_MS = 350;
+const DEFAULT_ITEM_PAGE = 1;
+const DEFAULT_ITEM_PAGE_SIZE = 10;
+
+function resolveErrorMessage(error: unknown): string {
+  if (error instanceof ApiClientError) return error.message;
+  if (error instanceof Error) return error.message;
+  return "Terjadi kesalahan. Silakan coba lagi.";
+}
+
+function getPositiveNumber(value: string | null, fallback: number) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
 
 export function DashboardPage() {
+  const { message, modal } = AntApp.useApp();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q") ?? "";
+  const categoryId = searchParams.get("categoryId") ?? "";
+  const currentPage = getPositiveNumber(searchParams.get("page"), DEFAULT_ITEM_PAGE);
+  const currentPageSize = getPositiveNumber(searchParams.get("pageSize"), DEFAULT_ITEM_PAGE_SIZE);
+  const createModalOpen = searchParams.get("itemAction") === "create";
+  const [formMode, setFormMode] = useState<"edit" | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const itemsQuery = useItemsQuery({
+    q: query || undefined,
+    categoryId: categoryId || undefined,
+    page: currentPage,
+    pageSize: currentPageSize,
+  });
+  const categoriesQuery = useCategoriesQuery({ pageSize: 100 });
+  const createItemMutation = useCreateItemMutation();
+  const updateItemMutation = useUpdateItemMutation();
+  const deleteItemMutation = useDeleteItemMutation();
+  const isSubmitting = createItemMutation.isPending || updateItemMutation.isPending;
+  const items = itemsQuery.data?.items ?? [];
+  const pagination = itemsQuery.data?.pagination ?? {
+    currentPage: DEFAULT_ITEM_PAGE,
+    pageSize: DEFAULT_ITEM_PAGE_SIZE,
+    totalPages: 0,
+    totalItems: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  };
+  const categories = categoriesQuery.data?.categories ?? [];
+  const lowStockCount = items.filter((item) => item.stock > 0 && item.stock <= item.minimumStock).length;
+  const outOfStockCount = items.filter((item) => item.stock <= 0).length;
   const dashboardStats: DashboardStatPreview[] = [
-    { icon: <InboxOutlined />, label: DASHBOARD_COPY.totalItems, value: "48" },
-    { icon: <FolderOpenOutlined />, label: DASHBOARD_COPY.totalCategories, tone: "blue", value: "5" },
-    { icon: <AlertOutlined />, label: DASHBOARD_COPY.lowStock, tone: "amber", value: "9" },
-    { icon: <StopOutlined />, label: DASHBOARD_COPY.outOfStock, tone: "red", value: "4" },
+    { icon: <InboxOutlined />, label: DASHBOARD_COPY.totalItems, value: String(pagination.totalItems) },
+    {
+      icon: <FolderOpenOutlined />,
+      label: DASHBOARD_COPY.totalCategories,
+      tone: "blue",
+      value: String(categoriesQuery.data?.pagination.totalItems ?? categories.length),
+    },
+    { icon: <AlertOutlined />, label: DASHBOARD_COPY.lowStock, tone: "amber", value: String(lowStockCount) },
+    { icon: <StopOutlined />, label: DASHBOARD_COPY.outOfStock, tone: "red", value: String(outOfStockCount) },
   ];
+  const modalTitle = formMode === "edit" ? ITEM_PAGE_COPY.editModalTitle : ITEM_PAGE_COPY.createModalTitle;
+
+  useEffect(() => {
+    return () => {
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+    };
+  }, []);
+
+  function setQueryParams(mutator: (params: URLSearchParams) => void) {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+
+    const nextPath = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(nextPath);
+  }
+
+  function updateSearch(nextSearch: string) {
+    setQueryParams((params) => {
+      const trimmed = nextSearch.trim();
+
+      if (trimmed) {
+        params.set("q", trimmed);
+      } else {
+        params.delete("q");
+      }
+
+      params.set("page", String(DEFAULT_ITEM_PAGE));
+    });
+  }
+
+  function scheduleSearch(nextSearch: string) {
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+
+    searchTimerRef.current = setTimeout(() => {
+      updateSearch(nextSearch);
+    }, ITEM_SEARCH_DEBOUNCE_MS);
+  }
+
+  function updateCategoryFilter(nextCategoryId: string) {
+    setQueryParams((params) => {
+      if (nextCategoryId === "all") {
+        params.delete("categoryId");
+      } else {
+        params.set("categoryId", nextCategoryId);
+      }
+
+      params.set("page", String(DEFAULT_ITEM_PAGE));
+    });
+  }
+
+  function updatePage(page: number, pageSize: number) {
+    setQueryParams((params) => {
+      params.set("page", String(page));
+      params.set("pageSize", String(pageSize));
+    });
+  }
+
+  function openCreateModal() {
+    setSelectedItem(null);
+    setFormMode(null);
+    setQueryParams((params) => {
+      params.set("itemAction", "create");
+    });
+  }
+
+  function openEditModal(item: Item) {
+    setSelectedItem(item);
+    setFormMode("edit");
+  }
+
+  function closeFormModal() {
+    if (isSubmitting) return;
+
+    setFormMode(null);
+    setSelectedItem(null);
+    setQueryParams((params) => {
+      params.delete("itemAction");
+    });
+  }
+
+  async function handleFormSubmit(values: ItemFormValues) {
+    try {
+      if (formMode === "edit" && selectedItem) {
+        await updateItemMutation.mutateAsync({ id: selectedItem.id, payload: values });
+        message.success(ITEM_PAGE_COPY.updateSuccess);
+      } else {
+        await createItemMutation.mutateAsync(values);
+        message.success(ITEM_PAGE_COPY.createSuccess);
+      }
+
+      closeFormModal();
+    } catch (error) {
+      message.error(resolveErrorMessage(error));
+    }
+  }
+
+  function confirmDelete(item: Item) {
+    modal.confirm({
+      title: ITEM_PAGE_COPY.deleteTitle,
+      content: `${ITEM_PAGE_COPY.deleteDescription} (${item.name})`,
+      okText: ITEM_PAGE_COPY.deleteOkText,
+      cancelText: ITEM_PAGE_COPY.cancelText,
+      okButtonProps: { danger: true },
+      async onOk() {
+        try {
+          await deleteItemMutation.mutateAsync(item.id);
+          message.success(ITEM_PAGE_COPY.deleteSuccess);
+        } catch (error) {
+          message.error(resolveErrorMessage(error));
+        }
+      },
+    });
+  }
 
   return (
     <>
@@ -57,52 +233,67 @@ export function DashboardPage() {
             {DASHBOARD_COPY.inventoryTitle}
           </Space>
         }
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
+            {ITEM_PAGE_COPY.addItem}
+          </Button>
+        }
       >
         <div className="table-toolbar">
-          <Input placeholder={DASHBOARD_COPY.searchPlaceholder} allowClear prefix={<SearchOutlined />} />
-          <Select defaultValue="all" options={[...DASHBOARD_CATEGORY_OPTIONS]} />
+          <Input
+            key={query}
+            aria-label={ITEM_PAGE_COPY.searchLabel}
+            defaultValue={query}
+            allowClear
+            prefix={<SearchOutlined />}
+            placeholder={DASHBOARD_COPY.searchPlaceholder}
+            onChange={(event) => scheduleSearch(event.target.value)}
+            onPressEnter={(event) => updateSearch(event.currentTarget.value)}
+            onClear={() => updateSearch("")}
+          />
+          <Select
+            aria-label={ITEM_PAGE_COPY.categoryFilterLabel}
+            value={categoryId || "all"}
+            loading={categoriesQuery.isLoading}
+            options={[
+              { label: ITEM_PAGE_COPY.allCategories, value: "all" },
+              ...categories.map((category) => ({ label: category.name, value: category.id })),
+            ]}
+            onChange={updateCategoryFilter}
+          />
         </div>
-        <Table
-          dataSource={DASHBOARD_ITEM_PREVIEWS}
-          scroll={{ x: 720 }}
-          pagination={{
-            pageSize: 10,
-            total: 48,
-            showSizeChanger: true,
-            pageSizeOptions: [10, 25, 50, 100],
-            showTotal: (total, range) =>
-              `${DASHBOARD_COPY.showingItems} ${range[0]}-${range[1]} dari ${total} ${DASHBOARD_COPY.itemSuffix}`,
-          }}
-          columns={[
-            { title: DASHBOARD_TABLE_COPY.itemName, dataIndex: "name" },
-            {
-              title: DASHBOARD_TABLE_COPY.category,
-              dataIndex: "category",
-              render: (category: string) => <Tag>{category}</Tag>,
-            },
-            { title: DASHBOARD_TABLE_COPY.stock, dataIndex: "stock" },
-            { title: DASHBOARD_TABLE_COPY.unit, dataIndex: "unit" },
-            { title: DASHBOARD_TABLE_COPY.sellingPrice, dataIndex: "sellingPrice" },
-            {
-              title: DASHBOARD_TABLE_COPY.actions,
-              key: "actions",
-              render: () => (
-                <Space size={6}>
-                  <Button size="small" icon={<EyeOutlined />}>
-                    {DASHBOARD_ACTIONS.detail}
-                  </Button>
-                  <Button size="small" icon={<EditOutlined />}>
-                    {DASHBOARD_ACTIONS.edit}
-                  </Button>
-                  <Button size="small" danger icon={<DeleteOutlined />}>
-                    {DASHBOARD_ACTIONS.delete}
-                  </Button>
-                </Space>
-              ),
-            },
-          ]}
-        />
+
+        {itemsQuery.isError ? (
+          <Alert showIcon type="error" message={ITEM_PAGE_COPY.errorTitle} description={resolveErrorMessage(itemsQuery.error)} />
+        ) : (
+          <ItemTable
+            items={items}
+            pagination={pagination}
+            loading={itemsQuery.isLoading}
+            onPageChange={updatePage}
+            onEdit={openEditModal}
+            onDelete={confirmDelete}
+          />
+        )}
       </Card>
+
+      <Modal
+        open={createModalOpen || formMode !== null}
+        title={modalTitle}
+        okText={ITEM_PAGE_COPY.saveText}
+        cancelText={ITEM_PAGE_COPY.cancelText}
+        okButtonProps={{ htmlType: "submit", form: ITEM_FORM_ID, loading: isSubmitting }}
+        onCancel={closeFormModal}
+        destroyOnHidden
+      >
+        <ItemForm
+          formId={ITEM_FORM_ID}
+          item={selectedItem}
+          categories={categories}
+          categoriesLoading={categoriesQuery.isLoading}
+          onSubmit={handleFormSubmit}
+        />
+      </Modal>
     </>
   );
 }
