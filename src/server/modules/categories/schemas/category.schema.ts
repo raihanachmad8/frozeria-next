@@ -13,6 +13,9 @@ const categoryDescriptionSchema = z.preprocess(
 
 export const categoryIdSchema = z.string().uuid("Invalid category id");
 
+const pageSchema = z.coerce.number().int().min(1).default(1);
+const pageSizeSchema = z.coerce.number().int().min(1).max(100).default(10);
+
 export const listCategoriesSchema = z.object({
   q: z
     .string()
@@ -20,6 +23,8 @@ export const listCategoriesSchema = z.object({
     .max(100, "Search keyword is too long")
     .optional()
     .transform((value) => (value && value.length > 0 ? value : undefined)),
+  page: pageSchema,
+  pageSize: pageSizeSchema,
 });
 
 export const createCategorySchema = z.object({

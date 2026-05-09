@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import type { Category } from "@/server/db/schema";
 import { AppError } from "@/server/http/errors";
+import type { ApiPaginationMeta } from "@/commons/types";
 
 import {
   categoryIdSchema,
@@ -10,6 +11,7 @@ import {
   updateCategorySchema,
 } from "../schemas/category.schema";
 import {
+  countCategoryRecords,
   createCategoryRecord,
   deleteCategoryRecord,
   findCategoryRecordById,
@@ -31,10 +33,27 @@ export interface DeleteCategoryResult {
   id: string;
 }
 
-export async function listCategories(input: unknown = {}): Promise<CategoryDto[]> {
+export interface ListCategoriesResult {
+  categories: CategoryDto[];
+  pagination: ApiPaginationMeta;
+}
+
+export async function listCategories(input: unknown = {}): Promise<ListCategoriesResult> {
   const params = listCategoriesSchema.parse(input);
-  const records = await listCategoryRecords(params);
-  return records.map(mapCategory);
+  const [records, total] = await Promise.all([listCategoryRecords(params), countCategoryRecords(params)]);
+  const totalPages = Math.ceil(total / params.pageSize);
+
+  return {
+    categories: records.map(mapCategory),
+    pagination: {
+      current_page: params.page,
+      per_page: params.pageSize,
+      total_pages: totalPages,
+      total_items: total,
+      has_next_page: params.page < totalPages,
+      has_prev_page: params.page > 1,
+    },
+  };
 }
 
 export async function getCategoryById(input: unknown): Promise<CategoryDto> {

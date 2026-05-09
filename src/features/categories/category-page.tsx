@@ -20,6 +20,8 @@ import { CATEGORY_PAGE_COPY } from "./constants";
 
 const CATEGORY_FORM_ID = "category-form";
 const CATEGORY_SEARCH_DEBOUNCE_MS = 350;
+const DEFAULT_CATEGORY_PAGE = 1;
+const DEFAULT_CATEGORY_PAGE_SIZE = 10;
 
 function resolveErrorMessage(error: unknown): string {
   if (error instanceof ApiClientError) return error.message;
@@ -33,9 +35,15 @@ export function CategoryPage() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  const currentPage = Number(searchParams.get("page") ?? DEFAULT_CATEGORY_PAGE);
+  const currentPageSize = Number(searchParams.get("pageSize") ?? DEFAULT_CATEGORY_PAGE_SIZE);
   const [formMode, setFormMode] = useState<"create" | "edit" | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const categoriesQuery = useCategoriesQuery({ q: query || undefined });
+  const categoriesQuery = useCategoriesQuery({
+    q: query || undefined,
+    page: Number.isFinite(currentPage) && currentPage > 0 ? currentPage : DEFAULT_CATEGORY_PAGE,
+    pageSize: Number.isFinite(currentPageSize) && currentPageSize > 0 ? currentPageSize : DEFAULT_CATEGORY_PAGE_SIZE,
+  });
   const createCategoryMutation = useCreateCategoryMutation();
   const updateCategoryMutation = useUpdateCategoryMutation();
   const deleteCategoryMutation = useDeleteCategoryMutation();
@@ -43,7 +51,15 @@ export function CategoryPage() {
   const modalTitle = formMode === "edit" ? CATEGORY_PAGE_COPY.editModalTitle : CATEGORY_PAGE_COPY.createModalTitle;
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const categories = categoriesQuery.data ?? [];
+  const categories = categoriesQuery.data?.categories ?? [];
+  const pagination = categoriesQuery.data?.pagination ?? {
+    currentPage: DEFAULT_CATEGORY_PAGE,
+    pageSize: DEFAULT_CATEGORY_PAGE_SIZE,
+    totalPages: 0,
+    totalItems: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  };
 
   useEffect(() => {
     return () => {
@@ -63,8 +79,17 @@ export function CategoryPage() {
       params.delete("q");
     }
 
+    params.set("page", String(DEFAULT_CATEGORY_PAGE));
+
     const nextPath = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(nextPath);
+  }
+
+  function updatePage(page: number, pageSize: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(page));
+    params.set("pageSize", String(pageSize));
+    router.replace(`${pathname}?${params.toString()}`);
   }
 
   function scheduleSearch(nextSearch: string) {
@@ -165,7 +190,9 @@ export function CategoryPage() {
         ) : (
           <CategoryTable
             categories={categories}
+            pagination={pagination}
             loading={categoriesQuery.isLoading}
+            onPageChange={updatePage}
             onEdit={openEditModal}
             onDelete={confirmDelete}
           />
