@@ -1,7 +1,7 @@
 "use client";
 
-import { InboxOutlined } from "@ant-design/icons";
-import { App as AntApp, Form, Input, InputNumber, Select, Typography, Upload } from "antd";
+import { PictureOutlined, PlusOutlined } from "@ant-design/icons";
+import { App as AntApp, Button, Form, Input, InputNumber, Select, Typography, Upload } from "antd";
 import type { UploadFile, UploadProps } from "antd";
 import { useEffect, useState } from "react";
 
@@ -151,6 +151,34 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
         })
       }
     >
+      <Form.Item name="photoUrl" hidden>
+        <Input />
+      </Form.Item>
+
+      <Form.Item label={ITEM_FORM_COPY.photoUrlLabel}>
+        <Upload.Dragger
+          accept="image/jpeg,image/png,image/webp"
+          beforeUpload={validatePhotoFile}
+          className="item-photo-upload"
+          customRequest={handlePhotoUpload}
+          fileList={photoFileList}
+          listType="picture"
+          maxCount={1}
+          onRemove={() => {
+            form.setFieldValue("photoUrl", null);
+            setPhotoFileList([]);
+            message.info(ITEM_FORM_COPY.photoUploadRemove);
+          }}
+        >
+          <p className="ant-upload-drag-icon">
+            <PictureOutlined />
+          </p>
+          <Typography.Text strong>{ITEM_FORM_COPY.photoUploadText}</Typography.Text>
+          <Typography.Paragraph type="secondary">{ITEM_FORM_COPY.photoUploadHint}</Typography.Paragraph>
+          <Button icon={<PlusOutlined />}>{ITEM_FORM_COPY.photoUploadButton}</Button>
+        </Upload.Dragger>
+      </Form.Item>
+
       <Form.Item
         label={ITEM_FORM_COPY.nameLabel}
         name="name"
@@ -159,34 +187,19 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
         <Input autoFocus placeholder={ITEM_FORM_COPY.namePlaceholder} maxLength={150} />
       </Form.Item>
 
-      <Form.Item label={ITEM_FORM_COPY.categoryLabel} name="categoryId">
-        <Select
-          allowClear
-          loading={categoriesLoading}
-          placeholder={ITEM_FORM_COPY.categoryPlaceholder}
-          options={categories.map((category) => ({ label: category.name, value: category.id }))}
-        />
-      </Form.Item>
-
       <div className="form-grid">
         <Form.Item
-          label={ITEM_FORM_COPY.stockLabel}
-          name="stock"
-          rules={[{ required: true, message: ITEM_FORM_COPY.stockRequired }]}
+          label={ITEM_FORM_COPY.categoryLabel}
+          name="categoryId"
+          rules={[{ required: true, message: ITEM_FORM_COPY.categoryRequired }]}
         >
-          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
+          <Select
+            loading={categoriesLoading}
+            placeholder={ITEM_FORM_COPY.categoryPlaceholder}
+            options={categories.map((category) => ({ label: category.name, value: category.id }))}
+          />
         </Form.Item>
 
-        <Form.Item
-          label={ITEM_FORM_COPY.minimumStockLabel}
-          name="minimumStock"
-          rules={[{ required: true, message: ITEM_FORM_COPY.minimumStockRequired }]}
-        >
-          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
-        </Form.Item>
-      </div>
-
-      <div className="form-grid">
         <Form.Item
           label={ITEM_FORM_COPY.unitLabel}
           name="unit"
@@ -199,55 +212,41 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
             optionFilterProp="label"
           />
         </Form.Item>
+      </div>
 
-        <Form.Item label={ITEM_FORM_COPY.packageSizeLabel} name="packageSize">
-          <Input placeholder={ITEM_FORM_COPY.packageSizePlaceholder} maxLength={80} />
+      <div className="form-grid">
+        <Form.Item
+          label={ITEM_FORM_COPY.stockLabel}
+          name="stock"
+          rules={[{ required: true, message: ITEM_FORM_COPY.stockRequired }]}
+        >
+          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
+        </Form.Item>
+
+        <Form.Item label={ITEM_FORM_COPY.minimumStockLabel} name="minimumStock">
+          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
       </div>
 
       <div className="form-grid">
-        <Form.Item label={ITEM_FORM_COPY.purchasePriceLabel} name="purchasePrice">
-          <InputNumber min={0} precision={0} prefix="Rp" style={{ width: "100%" }} />
+        <Form.Item label={ITEM_FORM_COPY.sellingPriceLabel} name="sellingPrice">
+          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item
-          label={ITEM_FORM_COPY.sellingPriceLabel}
-          name="sellingPrice"
-          rules={[{ required: true, message: ITEM_FORM_COPY.sellingPriceRequired }]}
-        >
-          <InputNumber min={0} precision={0} prefix="Rp" style={{ width: "100%" }} />
+        <Form.Item label={ITEM_FORM_COPY.purchasePriceLabel} name="purchasePrice">
+          <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
       </div>
 
-      <Form.Item label={ITEM_FORM_COPY.storageLocationLabel} name="storageLocation">
-        <Input placeholder={ITEM_FORM_COPY.storageLocationPlaceholder} maxLength={120} />
-      </Form.Item>
+      <div className="form-grid">
+        <Form.Item label={ITEM_FORM_COPY.packageSizeLabel} name="packageSize">
+          <Input placeholder={ITEM_FORM_COPY.packageSizePlaceholder} maxLength={80} />
+        </Form.Item>
 
-      <Form.Item name="photoUrl" hidden>
-        <Input />
-      </Form.Item>
-
-      <Form.Item label={ITEM_FORM_COPY.photoUrlLabel}>
-        <Upload.Dragger
-          accept="image/jpeg,image/png,image/webp"
-          beforeUpload={validatePhotoFile}
-          customRequest={handlePhotoUpload}
-          fileList={photoFileList}
-          listType="picture"
-          maxCount={1}
-          onRemove={() => {
-            form.setFieldValue("photoUrl", null);
-            setPhotoFileList([]);
-            message.info(ITEM_FORM_COPY.photoUploadRemove);
-          }}
-        >
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <Typography.Text strong>{ITEM_FORM_COPY.photoUploadText}</Typography.Text>
-          <Typography.Paragraph type="secondary">{ITEM_FORM_COPY.photoUploadHint}</Typography.Paragraph>
-        </Upload.Dragger>
-      </Form.Item>
+        <Form.Item label={ITEM_FORM_COPY.storageLocationLabel} name="storageLocation">
+          <Input placeholder={ITEM_FORM_COPY.storageLocationPlaceholder} maxLength={120} />
+        </Form.Item>
+      </div>
 
       <Form.Item label={ITEM_FORM_COPY.descriptionLabel} name="description">
         <Input.TextArea placeholder={ITEM_FORM_COPY.descriptionPlaceholder} maxLength={700} rows={3} showCount />

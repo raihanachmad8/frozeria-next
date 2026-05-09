@@ -224,6 +224,31 @@ a {
   gap: 12px;
 }
 
+.item-photo-upload .ant-upload-drag {
+  padding: 22px 16px;
+  background: #fbfbfb;
+  border-color: #cfd8d3;
+  border-radius: 2px;
+}
+
+.item-photo-upload .ant-upload-drag-icon {
+  margin-bottom: 8px;
+}
+
+.item-photo-upload .ant-upload-drag-icon .anticon {
+  color: #a8b2ad;
+  font-size: 34px;
+}
+
+.item-photo-upload .ant-typography {
+  display: block;
+}
+
+.item-photo-upload .ant-typography-secondary {
+  margin: 4px 0 10px;
+  font-size: 12px;
+}
+
 .item-detail-image {
   object-fit: cover;
   border: 1px solid var(--border);
