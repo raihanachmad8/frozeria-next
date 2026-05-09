@@ -52,8 +52,7 @@ export function DashboardPage() {
   const categoryId = searchParams.get("categoryId") ?? "";
   const currentPage = getPositiveNumber(searchParams.get("page"), DEFAULT_ITEM_PAGE);
   const currentPageSize = getPositiveNumber(searchParams.get("pageSize"), DEFAULT_ITEM_PAGE_SIZE);
-  const createModalOpen = searchParams.get("itemAction") === "create";
-  const [formMode, setFormMode] = useState<"edit" | null>(null);
+  const [formMode, setFormMode] = useState<"create" | "edit" | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [itemPhotoUploading, setItemPhotoUploading] = useState(false);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -154,10 +153,7 @@ export function DashboardPage() {
 
   function openCreateModal() {
     setSelectedItem(null);
-    setFormMode(null);
-    setQueryParams((params) => {
-      params.set("itemAction", "create");
-    });
+    setFormMode("create");
   }
 
   function openEditModal(item: Item) {
@@ -170,9 +166,6 @@ export function DashboardPage() {
 
     setFormMode(null);
     setSelectedItem(null);
-    setQueryParams((params) => {
-      params.delete("itemAction");
-    });
   }
 
   async function handleFormSubmit(values: ItemFormValues) {
@@ -273,7 +266,7 @@ export function DashboardPage() {
       </Card>
 
       <Modal
-        open={createModalOpen || formMode !== null}
+        open={formMode !== null}
         title={modalTitle}
         okText={ITEM_PAGE_COPY.saveText}
         cancelText={ITEM_PAGE_COPY.cancelText}
@@ -282,7 +275,7 @@ export function DashboardPage() {
         destroyOnHidden
       >
         <ItemForm
-          key={selectedItem?.id ?? "create"}
+          key={selectedItem?.id ?? formMode ?? "create"}
           formId={ITEM_FORM_ID}
           item={selectedItem}
           categories={categories}
