@@ -6,11 +6,37 @@ This checklist maps the BNSP practical-assessment brief to Frozeria implementati
 
 ## Automated Coverage
 
-Run after the demo database is configured and seeded:
+Run unit/backend checks:
+
+```bash
+pnpm test
+```
+
+Run browser smoke checks after the demo database is configured and seeded:
 
 ```bash
 pnpm test:e2e:smoke
 ```
+
+### Backend and Contract Checks
+
+| Requirement | Verification | Status |
+| --- | --- | --- |
+| Category validation rejects invalid input | Automated: category schema unit tests | [x] |
+| Category service handles list/create/update/delete and duplicate names | Automated: category service unit tests | [x] |
+| Item validation rejects invalid input and empty update payloads | Automated: item schema unit tests | [x] |
+| Item service handles list/create/update/delete, duplicate names, and missing categories | Automated: item service unit tests | [x] |
+| Dashboard summary is calculated from repository counts | Automated: dashboard service unit test | [x] |
+| API success and error envelopes stay consistent | Automated: HTTP response and route wrapper tests | [x] |
+| API route handlers call the correct services | Automated: `/api/v1/items`, `/api/v1/categories`, and upload route tests | [x] |
+| Photo upload validates file type and size | Automated: item photo upload service tests | [x] |
+| Storage driver selection works for local, Cloudinary, and S3 placeholder | Automated: storage driver factory tests | [x] |
+| Local storage writes to the public upload folder | Automated: local storage driver test | [x] |
+| Cloudinary upload handles success and failure responses | Automated: Cloudinary storage driver tests | [x] |
+| Server logger redacts sensitive fields | Automated: logger unit tests | [x] |
+| Client API wrapper unwraps success envelopes and raises API errors | Automated: API client unit tests | [x] |
+
+### Browser Smoke Checks
 
 | Requirement | Verification | Status |
 | --- | --- | --- |
