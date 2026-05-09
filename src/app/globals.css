@@ -221,7 +221,8 @@ a {
 .category-toolbar {
   margin-bottom: 14px;
   display: grid;
-  grid-template-columns: minmax(220px, 420px);
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
   gap: 10px;
 }
 

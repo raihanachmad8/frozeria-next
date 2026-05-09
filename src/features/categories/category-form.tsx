@@ -33,7 +33,7 @@ export function CategoryForm({ formId, category, onSubmit }: CategoryFormProps) 
       id={formId}
       form={form}
       layout="vertical"
-      requiredMark={false}
+      requiredMark
       onFinish={(values) =>
         onSubmit({
           name: values.name?.trim(),

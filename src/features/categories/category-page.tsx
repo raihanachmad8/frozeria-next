@@ -1,9 +1,9 @@
 "use client";
 
-import { AppstoreOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Alert, App as AntApp, Button, Card, Input, Modal, Space, Typography } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { Alert, App as AntApp, Button, Card, Input, Modal, Typography } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ApiClientError } from "@/lib/api";
 import type { Category } from "@/modules/categories";
@@ -19,6 +19,7 @@ import { CategoryTable } from "./category-table";
 import { CATEGORY_PAGE_COPY } from "./constants";
 
 const CATEGORY_FORM_ID = "category-form";
+const CATEGORY_SEARCH_DEBOUNCE_MS = 350;
 
 function resolveErrorMessage(error: unknown): string {
   if (error instanceof ApiClientError) return error.message;
@@ -40,8 +41,17 @@ export function CategoryPage() {
   const deleteCategoryMutation = useDeleteCategoryMutation();
   const isSubmitting = createCategoryMutation.isPending || updateCategoryMutation.isPending;
   const modalTitle = formMode === "edit" ? CATEGORY_PAGE_COPY.editModalTitle : CATEGORY_PAGE_COPY.createModalTitle;
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const categories = categoriesQuery.data ?? [];
+
+  useEffect(() => {
+    return () => {
+      if (searchTimerRef.current) {
+        clearTimeout(searchTimerRef.current);
+      }
+    };
+  }, []);
 
   function updateSearch(nextSearch: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -55,6 +65,16 @@ export function CategoryPage() {
 
     const nextPath = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(nextPath);
+  }
+
+  function scheduleSearch(nextSearch: string) {
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+
+    searchTimerRef.current = setTimeout(() => {
+      updateSearch(nextSearch);
+    }, CATEGORY_SEARCH_DEBOUNCE_MS);
   }
 
   function openCreateModal() {
@@ -117,20 +137,7 @@ export function CategoryPage() {
         </div>
       </section>
 
-      <Card
-        className="inventory-card"
-        title={
-          <Space>
-            <AppstoreOutlined />
-            {CATEGORY_PAGE_COPY.tableTitle}
-          </Space>
-        }
-        extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
-            {CATEGORY_PAGE_COPY.addCategory}
-          </Button>
-        }
-      >
+      <Card className="inventory-card">
         <div className="category-toolbar">
           <Input
             key={query}
@@ -139,9 +146,13 @@ export function CategoryPage() {
             allowClear
             prefix={<SearchOutlined />}
             placeholder={CATEGORY_PAGE_COPY.searchPlaceholder}
+            onChange={(event) => scheduleSearch(event.target.value)}
             onPressEnter={(event) => updateSearch(event.currentTarget.value)}
             onClear={() => updateSearch("")}
           />
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
+            {CATEGORY_PAGE_COPY.addCategory}
+          </Button>
         </div>
 
         {categoriesQuery.isError ? (
