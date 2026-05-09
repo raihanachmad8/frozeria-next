@@ -16,6 +16,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { ApiClientError } from "@/lib/api";
 import type { Item } from "@/modules/items";
 import { useCategoriesQuery } from "@/modules/categories";
+import { useDashboardSummaryQuery } from "@/modules/dashboard";
 import { useCreateItemMutation, useDeleteItemMutation, useItemsQuery, useUpdateItemMutation } from "@/modules/items";
 
 import {
@@ -62,6 +63,7 @@ export function DashboardPage() {
     pageSize: currentPageSize,
   });
   const categoriesQuery = useCategoriesQuery({ pageSize: 100 });
+  const summaryQuery = useDashboardSummaryQuery();
   const createItemMutation = useCreateItemMutation();
   const updateItemMutation = useUpdateItemMutation();
   const deleteItemMutation = useDeleteItemMutation();
@@ -76,18 +78,17 @@ export function DashboardPage() {
     hasPrevPage: false,
   };
   const categories = categoriesQuery.data?.categories ?? [];
-  const lowStockCount = items.filter((item) => item.stock > 0 && item.stock <= item.minimumStock).length;
-  const outOfStockCount = items.filter((item) => item.stock <= 0).length;
+  const summary = summaryQuery.data;
   const dashboardStats: DashboardStatPreview[] = [
-    { icon: <InboxOutlined />, label: DASHBOARD_COPY.totalItems, value: String(pagination.totalItems) },
+    { icon: <InboxOutlined />, label: DASHBOARD_COPY.totalItems, value: String(summary?.totalItems ?? pagination.totalItems) },
     {
       icon: <FolderOpenOutlined />,
       label: DASHBOARD_COPY.totalCategories,
       tone: "blue",
-      value: String(categoriesQuery.data?.pagination.totalItems ?? categories.length),
+      value: String(summary?.totalCategories ?? categoriesQuery.data?.pagination.totalItems ?? categories.length),
     },
-    { icon: <AlertOutlined />, label: DASHBOARD_COPY.lowStock, tone: "amber", value: String(lowStockCount) },
-    { icon: <StopOutlined />, label: DASHBOARD_COPY.outOfStock, tone: "red", value: String(outOfStockCount) },
+    { icon: <AlertOutlined />, label: DASHBOARD_COPY.lowStock, tone: "amber", value: String(summary?.lowStockItems ?? 0) },
+    { icon: <StopOutlined />, label: DASHBOARD_COPY.outOfStock, tone: "red", value: String(summary?.outOfStockItems ?? 0) },
   ];
   const modalTitle = formMode === "edit" ? ITEM_PAGE_COPY.editModalTitle : ITEM_PAGE_COPY.createModalTitle;
 

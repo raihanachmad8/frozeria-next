@@ -8,7 +8,7 @@ import { ROUTES } from "@/commons/constants";
 import type { Item, ItemListPagination } from "@/modules/items";
 import { formatRupiah } from "@/utils";
 
-import { ITEM_PAGE_COPY, ITEM_TABLE_COPY } from "./constants";
+import { ITEM_PAGE_COPY, ITEM_TABLE_COPY, LOW_STOCK_THRESHOLD } from "./constants";
 
 interface ItemTableProps {
   items: Item[];
@@ -24,7 +24,7 @@ function getStockTag(item: Item) {
     return <Tag color="red">{ITEM_PAGE_COPY.outOfStock}</Tag>;
   }
 
-  if (item.stock <= item.minimumStock) {
+  if (item.stock < LOW_STOCK_THRESHOLD) {
     return <Tag color="orange">{ITEM_PAGE_COPY.lowStock}</Tag>;
   }
 
@@ -116,6 +116,11 @@ export function ItemTable({ items, pagination, loading, onPageChange, onEdit, on
       dataSource={items}
       columns={columns}
       scroll={{ x: 980 }}
+      rowClassName={(item) => {
+        if (item.stock <= 0) return "item-row-out-of-stock";
+        if (item.stock < LOW_STOCK_THRESHOLD) return "item-row-low-stock";
+        return "";
+      }}
       locale={{ emptyText: ITEM_PAGE_COPY.emptyDescription }}
       pagination={{
         current: pagination.currentPage,

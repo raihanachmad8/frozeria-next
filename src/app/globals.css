@@ -230,6 +230,14 @@ a {
   border-radius: 8px;
 }
 
+.item-row-low-stock td {
+  background: #fff7e6;
+}
+
+.item-row-out-of-stock td {
+  background: #fff1f0;
+}
+
 .category-toolbar {
   margin-bottom: 14px;
   display: grid;
