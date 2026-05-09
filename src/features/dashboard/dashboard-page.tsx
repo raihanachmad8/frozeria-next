@@ -55,6 +55,7 @@ export function DashboardPage() {
   const createModalOpen = searchParams.get("itemAction") === "create";
   const [formMode, setFormMode] = useState<"edit" | null>(null);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [itemPhotoUploading, setItemPhotoUploading] = useState(false);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const itemsQuery = useItemsQuery({
     q: query || undefined,
@@ -67,7 +68,7 @@ export function DashboardPage() {
   const createItemMutation = useCreateItemMutation();
   const updateItemMutation = useUpdateItemMutation();
   const deleteItemMutation = useDeleteItemMutation();
-  const isSubmitting = createItemMutation.isPending || updateItemMutation.isPending;
+  const isSubmitting = createItemMutation.isPending || updateItemMutation.isPending || itemPhotoUploading;
   const items = itemsQuery.data?.items ?? [];
   const pagination = itemsQuery.data?.pagination ?? {
     currentPage: DEFAULT_ITEM_PAGE,
@@ -281,10 +282,12 @@ export function DashboardPage() {
         destroyOnHidden
       >
         <ItemForm
+          key={selectedItem?.id ?? "create"}
           formId={ITEM_FORM_ID}
           item={selectedItem}
           categories={categories}
           categoriesLoading={categoriesQuery.isLoading}
+          onUploadingChange={setItemPhotoUploading}
           onSubmit={handleFormSubmit}
         />
       </Modal>

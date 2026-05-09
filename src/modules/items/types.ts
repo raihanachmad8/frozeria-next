@@ -66,3 +66,11 @@ export type UpdateItemPayload = Partial<CreateItemPayload>;
 export interface DeleteItemResult {
   id: string;
 }
+
+export interface UploadedItemPhoto {
+  url: string;
+  key: string;
+  provider: "local" | "cloudinary" | "s3";
+  contentType: string;
+  size: number;
+}

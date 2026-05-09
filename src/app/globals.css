@@ -224,10 +224,29 @@ a {
   gap: 12px;
 }
 
-.item-detail-image {
+.item-detail-media {
   margin-bottom: 16px;
+}
+
+.item-detail-image {
   object-fit: cover;
   border-radius: 8px;
+}
+
+.item-photo-placeholder {
+  width: 220px;
+  height: 160px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  color: var(--muted);
+  background: #f3f7f5;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+.item-photo-placeholder .anticon {
+  font-size: 28px;
 }
 
 .inventory-table .ant-table-thead > tr > th {

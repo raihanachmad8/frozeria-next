@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftOutlined, InboxOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, InboxOutlined, PictureOutlined } from "@ant-design/icons";
 import { Alert, Button, Card, Descriptions, Image, Skeleton, Space, Tag, Typography } from "antd";
 
 import { ROUTES } from "@/commons/constants";
@@ -67,9 +67,16 @@ export function ItemDetailPage({ id }: ItemDetailPageProps) {
             </Space>
           }
         >
-          {item.photoUrl ? (
-            <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={220} height={160} />
-          ) : null}
+          <div className="item-detail-media">
+            {item.photoUrl ? (
+              <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={220} height={160} />
+            ) : (
+              <div className="item-photo-placeholder" aria-label="Foto barang belum tersedia">
+                <PictureOutlined />
+                <Typography.Text type="secondary">Foto belum tersedia</Typography.Text>
+              </div>
+            )}
+          </div>
 
           <Descriptions bordered column={{ xs: 1, md: 2 }}>
             <Descriptions.Item label={ITEM_DETAIL_COPY.name}>{item.name}</Descriptions.Item>
@@ -100,7 +107,7 @@ export function ItemDetailPage({ id }: ItemDetailPageProps) {
             <Descriptions.Item label={ITEM_DETAIL_COPY.photoUrl}>
               {item.photoUrl ?? ITEM_PAGE_COPY.noValue}
             </Descriptions.Item>
-            <Descriptions.Item label={ITEM_DETAIL_COPY.description} span={2}>
+            <Descriptions.Item label={ITEM_DETAIL_COPY.description}>
               {item.description ?? ITEM_PAGE_COPY.noValue}
             </Descriptions.Item>
             <Descriptions.Item label={ITEM_DETAIL_COPY.createdAt}>{formatDate(item.createdAt)}</Descriptions.Item>
