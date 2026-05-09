@@ -5,6 +5,7 @@ import type { ApiErrorDetails } from "@/commons/types";
 
 import { AppError } from "./errors";
 import { dataResponse, errorResponse, isApiHandlerResult } from "./response";
+import { logger } from "@/server/logger";
 
 interface HandleApiOptions {
   status?: number;
@@ -25,6 +26,13 @@ function zodErrorDetails(error: ZodError): ApiErrorDetails {
 
 export async function handleApi<T>(handler: () => Promise<T> | T, options?: HandleApiOptions) {
   const requestId = options?.request?.headers.get("x-request-id")?.trim() || undefined;
+  const routeContext = options?.request
+    ? {
+        method: options.request.method,
+        pathname: options.request.nextUrl.pathname,
+        requestId,
+      }
+    : { requestId };
 
   try {
     const result = await handler();
@@ -41,6 +49,21 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
     return dataResponse(result, { status: options?.status, message: options?.message, requestId });
   } catch (error) {
     if (error instanceof AppError) {
+      if (error.status >= 500) {
+        logger.error("API request failed with application error.", {
+          ...routeContext,
+          status: error.status,
+          code: error.code,
+          error,
+        });
+      } else {
+        logger.warn("API request failed with application error.", {
+          ...routeContext,
+          status: error.status,
+          code: error.code,
+        });
+      }
+
       return errorResponse({
         status: error.status,
         message: error.message,
@@ -51,6 +74,15 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
     }
 
     if (error instanceof ZodError) {
+      logger.warn("API request validation failed.", {
+        ...routeContext,
+        status: 422,
+        issues: error.issues.map((issue) => ({
+          path: issue.path.join(".") || "body",
+          message: issue.message,
+        })),
+      });
+
       return errorResponse({
         status: 422,
         message: "Validation failed.",
@@ -59,6 +91,12 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
         requestId,
       });
     }
+
+    logger.error("API request failed with unexpected error.", {
+      ...routeContext,
+      status: 500,
+      error,
+    });
 
     return errorResponse({
       status: 500,

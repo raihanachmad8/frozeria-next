@@ -297,6 +297,37 @@ Done when:
 Title:
 
 ```text
+v0.9.0 - Final Hardening
+```
+
+Due date:
+
+```text
+2026-05-10
+```
+
+Description:
+
+```text
+Add final release confidence before promoting dev to main.
+
+Scope:
+- Add minimal Playwright smoke E2E coverage.
+- Add server-side logger helper.
+- Add PDF requirements checklist.
+- Verify manual demo-readiness items.
+
+Done when:
+- Smoke E2E checks can be run against the configured demo environment.
+- Logger is available for API and service failures.
+- PDF requirements are mapped to automated or manual verification.
+```
+
+## Milestone 10
+
+Title:
+
+```text
 v1.0.0 - Demo Release
 ```
 
@@ -309,19 +340,15 @@ Due date:
 Description:
 
 ```text
-Finalize the stable release for the practical assessment demo.
+Publish the stable release for the practical assessment demo.
 
 Scope:
-- Verify every requirement from the PDF brief.
-- Test the full demo flow end to end.
-- Fix final UI, validation, and data issues.
-- Update README and setup documentation.
 - Merge dev into main through pull request.
+- Confirm GitHub Actions and production deployment.
 - Create release tag v1.0.0.
 - Prepare GitHub release notes with demo summary.
 
 Done when:
-- All required assessment features are complete.
 - The production deployment can be opened and demonstrated.
 - The app works without a local server.
 - The v1.0.0 tag exists on main.

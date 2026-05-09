@@ -1,6 +1,6 @@
 {
   "name": "frozeria-next",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "packageManager": "pnpm@10.22.0",
   "scripts": {
@@ -10,6 +10,9 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test tests/e2e/frozeria-smoke.spec.ts",
+    "test:e2e:ui": "playwright test --ui",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:reset": "tsx scripts/reset-db.ts",
@@ -28,6 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
