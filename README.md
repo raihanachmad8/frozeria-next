@@ -42,7 +42,7 @@ The project follows the assessment brief and targets a stable `v1.0.0` demo rele
 
 ## Project Status
 
-Current version: `v0.2.0`
+Current version: `v0.5.0`
 
 Target release: `v1.0.0`
 
@@ -135,7 +135,7 @@ S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
-NEXT_PUBLIC_APP_VERSION=0.2.0
+NEXT_PUBLIC_APP_VERSION=0.5.0
 ```
 
 Storage drivers:

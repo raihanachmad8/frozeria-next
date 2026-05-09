@@ -145,7 +145,7 @@ a {
 }
 
 .page-heading {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -154,12 +154,12 @@ a {
 
 .page-heading h1.ant-typography {
   margin-bottom: 4px;
-  font-size: 38px;
-  line-height: 1.16;
+  font-size: 28px;
+  line-height: 1.2;
 }
 
 .page-heading .ant-typography {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .inventory-card {
@@ -230,10 +230,62 @@ a {
   border-radius: 8px;
 }
 
+.inventory-table .ant-table-thead > tr > th {
+  background: #f3f7f5;
+  font-weight: 700;
+}
+
+.inventory-table .ant-table-tbody > tr > td {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-low-stock > td {
+  background: #fffaf0;
+  border-bottom-color: #f6e6c4;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-out-of-stock > td {
+  background: #fff7f7;
+  border-bottom-color: #f1d4d4;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-low-stock:hover > td {
+  background: #fff5df;
+}
+
+.inventory-table .ant-table-tbody > tr.item-row-out-of-stock:hover > td {
+  background: #fff0f0;
+}
+
+.item-stock-cell {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stock-value {
+  min-width: 28px;
+  font-weight: 600;
+}
+
+.stock-status-tag {
+  margin-inline-end: 0;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+  padding-inline: 8px;
+}
+
+.item-action-group .ant-btn-sm {
+  padding-inline: 8px;
+}
+
 .category-toolbar {
   margin-bottom: 14px;
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto;
+  grid-template-columns: minmax(220px, 1fr);
   align-items: center;
   gap: 10px;
 }
@@ -278,11 +330,69 @@ a {
 
   .app-content {
     width: min(1180px, calc(100vw - 24px));
-    padding: 20px 0 28px;
+    padding: 16px 0 24px;
   }
 
   .page-heading {
     flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .page-heading h1.ant-typography {
+    font-size: 18px;
+  }
+
+  .page-heading .ant-typography {
+    font-size: 13px;
+  }
+
+  .inventory-card {
+    margin-top: 12px;
+  }
+
+  .ant-card .ant-card-body {
+    padding: 14px;
+  }
+
+  .inventory-card .ant-card-head {
+    min-height: auto;
+    padding: 12px 14px 0;
+    border-bottom: 0;
+  }
+
+  .inventory-card .ant-card-head-wrapper {
+    display: block;
+  }
+
+  .inventory-card .ant-card-extra {
+    width: 100%;
+    margin-inline-start: 0;
+    padding: 0;
+  }
+
+  .inventory-card .ant-card-extra .ant-btn {
+    width: 100%;
+  }
+
+  .stat-card-content {
+    gap: 8px;
+  }
+
+  .stat-card-content h2.ant-typography {
+    margin-bottom: 0;
+    font-size: 22px;
+  }
+
+  .stat-card-content .ant-typography {
+    font-size: 13px;
+  }
+
+  .stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 15px;
   }
 
   .table-toolbar {

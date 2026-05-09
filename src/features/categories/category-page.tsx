@@ -162,7 +162,14 @@ export function CategoryPage() {
         </div>
       </section>
 
-      <Card className="inventory-card">
+      <Card
+        className="inventory-card"
+        extra={
+          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
+            {CATEGORY_PAGE_COPY.addCategory}
+          </Button>
+        }
+      >
         <div className="category-toolbar">
           <Input
             key={query}
@@ -175,9 +182,6 @@ export function CategoryPage() {
             onPressEnter={(event) => updateSearch(event.currentTarget.value)}
             onClear={() => updateSearch("")}
           />
-          <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
-            {CATEGORY_PAGE_COPY.addCategory}
-          </Button>
         </div>
 
         {categoriesQuery.isError ? (

@@ -25,6 +25,8 @@ export const ITEM_PAGE_COPY = {
   available: "Tersedia",
 } as const;
 
+export const LOW_STOCK_THRESHOLD = 20;
+
 export const ITEM_FORM_COPY = {
   nameLabel: "Nama barang",
   namePlaceholder: "Contoh: Ayam nugget crispy",

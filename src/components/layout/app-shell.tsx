@@ -5,7 +5,6 @@ import {
   BarsOutlined,
   InboxOutlined,
   MenuOutlined,
-  PlusOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import { Button, Drawer, Layout, Typography } from "antd";
@@ -13,7 +12,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-import { APP_ACTIONS, APP_NAME, APP_VERSION, NAVIGATION_LABELS, ROUTES } from "@/commons/constants";
+import { APP_NAME, APP_VERSION, NAVIGATION_LABELS, ROUTES } from "@/commons/constants";
 
 const navItems = [
   { href: ROUTES.dashboard, label: NAVIGATION_LABELS.dashboard, icon: <AppstoreOutlined /> },
@@ -60,9 +59,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <div className="header-actions">
           <Button className="mobile-menu-button" icon={<MenuOutlined />} onClick={() => setMobileNavOpen(true)} />
-          <Button type="primary" icon={<PlusOutlined />} href={ROUTES.dashboardCreateItem}>
-            {APP_ACTIONS.addItem}
-          </Button>
         </div>
       </Layout.Header>
 
