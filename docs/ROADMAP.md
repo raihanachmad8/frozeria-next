@@ -1,6 +1,6 @@
 # Roadmap
 
-Current version: `v0.7.0`
+Current version: `v0.8.0`
 
 Final target: `v1.0.0` no later than `2026-05-10`
 
@@ -31,4 +31,7 @@ Roadmap -> GitHub Milestone -> GitHub Issue -> feature branch -> dev -> main -> 
 - [x] Add database migration and seed script.
 - [ ] Configure a real `DATABASE_URL`.
 - [ ] Run database migration and seed against the target database.
-- [ ] Add GitHub Actions CI after the database foundation is verified.
+- [x] Add GitHub Actions CI after the database foundation is verified.
+- [ ] Connect the repository to Vercel.
+- [ ] Configure Vercel environment variables.
+- [ ] Verify preview and production deployments.
