@@ -55,7 +55,11 @@ export function ItemTable({ items, pagination, loading, onPageChange, onEdit, on
       dataIndex: "category",
       width: 160,
       render: (_, item) =>
-        item.category ? <Typography.Text>{item.category.name}</Typography.Text> : <Typography.Text type="secondary">{ITEM_PAGE_COPY.noCategory}</Typography.Text>,
+        item.category ? (
+          <Tag className="category-badge">{item.category.name}</Tag>
+        ) : (
+          <Tag className="category-badge category-badge-empty">{ITEM_PAGE_COPY.noCategory}</Tag>
+        ),
     },
     {
       title: ITEM_TABLE_COPY.stock,

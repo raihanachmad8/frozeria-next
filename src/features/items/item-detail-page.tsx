@@ -83,7 +83,7 @@ export function ItemDetailPage({ id }: ItemDetailPageProps) {
         <Card className="inventory-card item-detail-card">
           <div className="item-detail-summary">
             {item.photoUrl ? (
-              <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={112} height={112} />
+              <Image className="item-detail-image" src={item.photoUrl} alt={item.name} width={104} height={104} />
             ) : (
               <div className="item-photo-placeholder" aria-label="Foto barang belum tersedia">
                 <PictureOutlined />

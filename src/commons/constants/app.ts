@@ -1,6 +1,8 @@
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Frozeria Stok";
+import { PUBLIC_ENV } from "./public-env";
 
-export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || "0.6.0";
+export const APP_NAME = PUBLIC_ENV.appName;
+
+export const APP_VERSION = PUBLIC_ENV.appVersion;
 
 export const API_VERSION = "v1";
 

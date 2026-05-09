@@ -3,6 +3,7 @@
 import { Form, Input } from "antd";
 import { useEffect } from "react";
 
+import { FormLabelWithHelp } from "@/components/shared/form-label-with-help";
 import type { Category } from "@/modules/categories";
 
 import { CATEGORY_PAGE_COPY } from "./constants";
@@ -42,14 +43,17 @@ export function CategoryForm({ formId, category, onSubmit }: CategoryFormProps) 
       }
     >
       <Form.Item
-        label={CATEGORY_PAGE_COPY.nameLabel}
+        label={<FormLabelWithHelp label={CATEGORY_PAGE_COPY.nameLabel} help={CATEGORY_PAGE_COPY.nameHelp} />}
         name="name"
         rules={[{ required: true, message: "Nama kategori wajib diisi." }]}
       >
         <Input autoFocus placeholder={CATEGORY_PAGE_COPY.namePlaceholder} maxLength={100} />
       </Form.Item>
 
-      <Form.Item label={CATEGORY_PAGE_COPY.descriptionLabel} name="description">
+      <Form.Item
+        label={<FormLabelWithHelp label={CATEGORY_PAGE_COPY.descriptionLabel} help={CATEGORY_PAGE_COPY.descriptionHelp} />}
+        name="description"
+      >
         <Input.TextArea placeholder={CATEGORY_PAGE_COPY.descriptionPlaceholder} maxLength={500} rows={4} showCount />
       </Form.Item>
     </Form>

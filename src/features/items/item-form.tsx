@@ -5,6 +5,7 @@ import { App as AntApp, Form, Input, InputNumber, Select, Typography, Upload } f
 import type { UploadFile, UploadProps } from "antd";
 import { useEffect, useState } from "react";
 
+import { FormLabelWithHelp } from "@/components/shared/form-label-with-help";
 import { ApiClientError } from "@/lib/api";
 import type { Category } from "@/modules/categories";
 import type { CreateItemPayload, Item } from "@/modules/items";
@@ -131,6 +132,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
 
   return (
     <Form
+      className="item-form"
       id={formId}
       form={form}
       layout="vertical"
@@ -155,7 +157,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
         <Input />
       </Form.Item>
 
-      <Form.Item label={ITEM_FORM_COPY.photoUrlLabel}>
+      <Form.Item label={<FormLabelWithHelp label={ITEM_FORM_COPY.photoUrlLabel} help={ITEM_FORM_COPY.photoUrlHelp} />}>
         <Upload.Dragger
           accept="image/jpeg,image/png,image/webp"
           beforeUpload={validatePhotoFile}
@@ -183,7 +185,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
       </Form.Item>
 
       <Form.Item
-        label={ITEM_FORM_COPY.nameLabel}
+        label={<FormLabelWithHelp label={ITEM_FORM_COPY.nameLabel} help={ITEM_FORM_COPY.nameHelp} />}
         name="name"
         rules={[{ required: true, message: ITEM_FORM_COPY.nameRequired }]}
       >
@@ -192,7 +194,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
 
       <div className="form-grid">
         <Form.Item
-          label={ITEM_FORM_COPY.categoryLabel}
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.categoryLabel} help={ITEM_FORM_COPY.categoryHelp} />}
           name="categoryId"
           rules={[{ required: true, message: ITEM_FORM_COPY.categoryRequired }]}
         >
@@ -204,7 +206,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
         </Form.Item>
 
         <Form.Item
-          label={ITEM_FORM_COPY.unitLabel}
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.unitLabel} help={ITEM_FORM_COPY.unitHelp} />}
           name="unit"
           rules={[{ required: true, message: ITEM_FORM_COPY.unitRequired }]}
         >
@@ -219,39 +221,57 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
 
       <div className="form-grid">
         <Form.Item
-          label={ITEM_FORM_COPY.stockLabel}
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.stockLabel} help={ITEM_FORM_COPY.stockHelp} />}
           name="stock"
           rules={[{ required: true, message: ITEM_FORM_COPY.stockRequired }]}
         >
           <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item label={ITEM_FORM_COPY.minimumStockLabel} name="minimumStock">
+        <Form.Item
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.minimumStockLabel} help={ITEM_FORM_COPY.minimumStockHelp} />}
+          name="minimumStock"
+        >
           <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
       </div>
 
       <div className="form-grid">
-        <Form.Item label={ITEM_FORM_COPY.sellingPriceLabel} name="sellingPrice">
+        <Form.Item
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.sellingPriceLabel} help={ITEM_FORM_COPY.sellingPriceHelp} />}
+          name="sellingPrice"
+        >
           <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item label={ITEM_FORM_COPY.purchasePriceLabel} name="purchasePrice">
+        <Form.Item
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.purchasePriceLabel} help={ITEM_FORM_COPY.purchasePriceHelp} />}
+          name="purchasePrice"
+        >
           <InputNumber min={0} precision={0} style={{ width: "100%" }} />
         </Form.Item>
       </div>
 
       <div className="form-grid">
-        <Form.Item label={ITEM_FORM_COPY.packageSizeLabel} name="packageSize">
+        <Form.Item
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.packageSizeLabel} help={ITEM_FORM_COPY.packageSizeHelp} />}
+          name="packageSize"
+        >
           <Input placeholder={ITEM_FORM_COPY.packageSizePlaceholder} maxLength={80} />
         </Form.Item>
 
-        <Form.Item label={ITEM_FORM_COPY.storageLocationLabel} name="storageLocation">
+        <Form.Item
+          label={<FormLabelWithHelp label={ITEM_FORM_COPY.storageLocationLabel} help={ITEM_FORM_COPY.storageLocationHelp} />}
+          name="storageLocation"
+        >
           <Input placeholder={ITEM_FORM_COPY.storageLocationPlaceholder} maxLength={120} />
         </Form.Item>
       </div>
 
-      <Form.Item label={ITEM_FORM_COPY.descriptionLabel} name="description">
+      <Form.Item
+        label={<FormLabelWithHelp label={ITEM_FORM_COPY.descriptionLabel} help={ITEM_FORM_COPY.descriptionHelp} />}
+        name="description"
+      >
         <Input.TextArea placeholder={ITEM_FORM_COPY.descriptionPlaceholder} maxLength={700} rows={3} showCount />
       </Form.Item>
     </Form>
