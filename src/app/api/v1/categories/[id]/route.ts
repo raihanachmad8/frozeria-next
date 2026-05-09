@@ -12,17 +12,20 @@ interface CategoryRouteContext {
   }>;
 }
 
-export async function GET(_request: NextRequest, context: CategoryRouteContext) {
+export async function GET(request: NextRequest, context: CategoryRouteContext) {
   const { id } = await context.params;
-  return handleApi(() => getCategoryById(id));
+  return handleApi(() => getCategoryById(id), { request, message: "Category retrieved successfully." });
 }
 
 export async function PUT(request: NextRequest, context: CategoryRouteContext) {
   const { id } = await context.params;
-  return handleApi(async () => updateCategory(id, await readJsonBody(request)));
+  return handleApi(async () => updateCategory(id, await readJsonBody(request)), {
+    request,
+    message: "Category updated successfully.",
+  });
 }
 
-export async function DELETE(_request: NextRequest, context: CategoryRouteContext) {
+export async function DELETE(request: NextRequest, context: CategoryRouteContext) {
   const { id } = await context.params;
-  return handleApi(async () => deleteCategory(id));
+  return handleApi(async () => deleteCategory(id), { request, message: "Category deleted successfully." });
 }
