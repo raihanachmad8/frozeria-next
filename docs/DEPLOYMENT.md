@@ -37,7 +37,7 @@ Add these variables in Vercel Project Settings. Use different values for Preview
 
 ```env
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
-NEXT_PUBLIC_APP_VERSION=0.9.0
+NEXT_PUBLIC_APP_VERSION=1.0.0
 
 NEXT_PUBLIC_PARTICIPANT_NAME=
 NEXT_PUBLIC_PARTICIPANT_STUDENT_ID=

@@ -10,7 +10,7 @@ Due date (optional)
 Description (optional)
 ```
 
-Target schedule: current project version is `v0.2.0`, and the final `v1.0.0` demo release must be ready no later than May 10, 2026.
+Target schedule: current project version is `v1.0.0`, and the final `v1.0.0` demo release must be ready no later than May 10, 2026.
 
 ## Milestone 1
 

@@ -1,6 +1,6 @@
 # Roadmap
 
-Current version: `v0.9.0`
+Current version: `v1.0.0`
 
 Final target: `v1.0.0` no later than `2026-05-10`
 
@@ -30,12 +30,12 @@ Roadmap -> GitHub Milestone -> GitHub Issue -> feature branch -> dev -> main -> 
 - [x] Scaffold the Next.js application.
 - [x] Add database schema foundation.
 - [x] Add database migration and seed script.
-- [ ] Configure a real `DATABASE_URL`.
-- [ ] Run database migration and seed against the target database.
+- [x] Configure a real `DATABASE_URL`.
+- [x] Run database migration and seed against the target database.
 - [x] Add GitHub Actions CI after the database foundation is verified.
-- [ ] Connect the repository to Vercel.
-- [ ] Configure Vercel environment variables.
-- [ ] Verify preview and production deployments.
+- [x] Connect the repository to Vercel.
+- [x] Configure Vercel environment variables.
+- [x] Verify preview and production deployments.
 - [x] Add final smoke E2E checks.
 - [x] Add server-side logger helper.
 - [x] Add PDF requirements checklist.

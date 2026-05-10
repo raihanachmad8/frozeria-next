@@ -42,11 +42,11 @@ The project follows the assessment brief and targets a stable `v1.0.0` demo rele
 
 ## Project Status
 
-Current version: `v0.9.0`
+Current version: `v1.0.0`
 
 Target release: `v1.0.0`
 
-Current phase: final hardening and release verification.
+Current phase: demo release.
 
 ## Roadmap
 
@@ -138,7 +138,7 @@ S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
-NEXT_PUBLIC_APP_VERSION=0.9.0
+NEXT_PUBLIC_APP_VERSION=1.0.0
 NEXT_PUBLIC_PARTICIPANT_NAME=
 NEXT_PUBLIC_PARTICIPANT_STUDENT_ID=
 NEXT_PUBLIC_PARTICIPANT_CLASS=
