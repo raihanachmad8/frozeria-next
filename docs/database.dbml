@@ -1,0 +1,43 @@
+Project frozeria_next {
+  database_type: "PostgreSQL"
+  Note: "Frozen-food stock management database schema."
+}
+
+Table categories {
+  id text [pk]
+  name text [not null, unique]
+  description text
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    name [name: "categories_name_idx"]
+  }
+
+  Note: "Frozen-food item categories. Deleting a category must not delete its items."
+}
+
+Table items {
+  id text [pk]
+  name text [not null, unique]
+  category_id text [ref: > categories.id, delete: set null]
+  stock integer [not null, default: 0]
+  minimum_stock integer [not null, default: 20]
+  unit text [not null]
+  package_size text
+  purchase_price integer [not null, default: 0]
+  selling_price integer [not null]
+  photo_url text
+  storage_location text
+  description text
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    name [name: "items_name_idx"]
+    category_id [name: "items_category_id_idx"]
+    stock [name: "items_stock_idx"]
+  }
+
+  Note: "Inventory item records. Prices are stored as integer Rupiah values."
+}
