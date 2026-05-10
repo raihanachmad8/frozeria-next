@@ -49,9 +49,23 @@ export const createItemSchema = z.object({
   description: optionalNullableTextSchema(500, "Item description is too long"),
 });
 
-export const updateItemSchema = createItemSchema.partial().refine((value) => Object.keys(value).length > 0, {
+export const updateItemSchema = z
+  .object({
+    name: itemNameSchema.optional(),
+    categoryId: categoryIdSchema,
+    stock: nonNegativeIntegerSchema.optional(),
+    minimumStock: nonNegativeIntegerSchema.optional(),
+    unit: itemUnitSchema.optional(),
+    packageSize: optionalNullableTextSchema(80, "Package size is too long"),
+    purchasePrice: nonNegativeIntegerSchema.optional(),
+    sellingPrice: nonNegativeIntegerSchema.optional(),
+    photoUrl: optionalNullableTextSchema(500, "Photo URL is too long"),
+    storageLocation: optionalNullableTextSchema(120, "Storage location is too long"),
+    description: optionalNullableTextSchema(500, "Item description is too long"),
+  })
+  .refine((value) => Object.keys(value).length > 0, {
   message: "At least one item field must be provided",
-});
+  });
 
 export type ListItemsInput = z.infer<typeof listItemsSchema>;
 export type CreateItemInput = z.infer<typeof createItemSchema>;

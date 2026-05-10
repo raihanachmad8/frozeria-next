@@ -42,11 +42,11 @@ The project follows the assessment brief and targets a stable `v1.0.0` demo rele
 
 ## Project Status
 
-Current version: `v0.8.0`
+Current version: `v0.9.0`
 
 Target release: `v1.0.0`
 
-Current phase: CI and Vercel deployment readiness.
+Current phase: final hardening and release verification.
 
 ## Roadmap
 
@@ -60,6 +60,7 @@ Current phase: CI and Vercel deployment readiness.
 | `v0.6.0` | `2026-05-09` | Photo upload |
 | `v0.7.0` | `2026-05-10` | Help and demo polish |
 | `v0.8.0` | `2026-05-10` | CI and deployment |
+| `v0.9.0` | `2026-05-10` | Final hardening |
 | `v1.0.0` | `2026-05-10` | Demo release |
 
 Detailed planning:
@@ -68,6 +69,7 @@ Detailed planning:
 - [GitHub Milestones](docs/MILESTONES.md)
 - [Project Standards](docs/PROJECT_STANDARDS.md)
 - [Deployment Guide](docs/DEPLOYMENT.md)
+- [PDF Requirements Checklist](docs/PDF_REQUIREMENTS_CHECKLIST.md)
 - [Database Schema](docs/DATABASE.md)
 - [Database DBML](docs/database.dbml)
 
@@ -136,7 +138,7 @@ S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
-NEXT_PUBLIC_APP_VERSION=0.8.0
+NEXT_PUBLIC_APP_VERSION=0.9.0
 NEXT_PUBLIC_PARTICIPANT_NAME=
 NEXT_PUBLIC_PARTICIPANT_STUDENT_ID=
 NEXT_PUBLIC_PARTICIPANT_CLASS=
@@ -166,13 +168,33 @@ pnpm test
 pnpm build
 ```
 
+Test layout:
+
+```text
+tests/unit  Vitest unit and backend contract tests
+tests/e2e   Playwright browser smoke tests by module
+```
+
+Run unit/backend tests:
+
+```bash
+pnpm test:unit
+```
+
+Run final per-module smoke E2E checks after the demo database is configured and seeded:
+
+```bash
+pnpm test:e2e:smoke
+```
+
 ## Deployment
 
 Deployment uses Vercel Git integration:
 
 - `dev` creates a preview deployment.
 - `main` creates the production deployment.
-- GitHub Actions runs `pnpm release:check` as a quality gate.
+- GitHub Actions runs `pnpm release:check` as the baseline quality gate.
+- GitHub Actions runs Playwright smoke E2E checks when the `E2E_DATABASE_URL` repository secret is configured.
 
 See [Deployment Guide](docs/DEPLOYMENT.md) for environment variables, migration steps, health checks, and release checklist.
 

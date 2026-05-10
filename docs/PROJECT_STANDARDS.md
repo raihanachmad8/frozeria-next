@@ -15,7 +15,8 @@ src/commons       shared constants, enums, and types
 src/components    reusable layout, providers, and shared UI
 src/lib           reusable client/shared integrations
 src/utils         pure utility functions
-tests             unit and integration tests
+tests/unit        Vitest unit, service, API contract, and backend module tests
+tests/e2e         Playwright browser smoke tests by feature module
 ```
 
 ## Feature Module Pattern
@@ -115,4 +116,6 @@ Before finishing a feature:
 - UI copy is not scattered across components.
 - API responses follow the documented shape.
 - Database work goes through repositories and services.
+- Unit/backend tests live under `tests/unit`.
+- Browser smoke tests live under `tests/e2e` and are split by feature module.
 - `pnpm release:check` passes.

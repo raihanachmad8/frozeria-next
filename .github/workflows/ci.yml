@@ -16,21 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_APP_NAME: Frozeria Stok
-      NEXT_PUBLIC_APP_VERSION: 0.8.0
+      NEXT_PUBLIC_APP_VERSION: 0.9.0
       STORAGE_DRIVER: local
       LOCAL_STORAGE_PUBLIC_PATH: /uploads
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10.22.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: pnpm
@@ -40,3 +40,62 @@ jobs:
 
       - name: Run release checks
         run: pnpm release:check
+
+  e2e-smoke:
+    name: E2E smoke checks
+    runs-on: ubuntu-latest
+    needs: quality
+    env:
+      NEXT_PUBLIC_APP_NAME: Frozeria Stok
+      NEXT_PUBLIC_APP_VERSION: 0.9.0
+      NEXT_PUBLIC_PARTICIPANT_NAME: Demo Participant
+      NEXT_PUBLIC_PARTICIPANT_STUDENT_ID: Demo Student ID
+      NEXT_PUBLIC_PARTICIPANT_CLASS: Demo Class
+      NEXT_PUBLIC_PARTICIPANT_ADDRESS: Demo Address
+      NEXT_PUBLIC_PARTICIPANT_PHONE: Demo Phone
+      NEXT_PUBLIC_PARTICIPANT_EMAIL: demo@example.com
+      STORAGE_DRIVER: local
+      LOCAL_STORAGE_PUBLIC_PATH: /uploads
+      DATABASE_URL: ${{ secrets.E2E_DATABASE_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Skip E2E when test database is not configured
+        if: env.DATABASE_URL == ''
+        run: echo "E2E_DATABASE_URL secret is not configured; skipping browser smoke checks."
+
+      - name: Install Playwright browser
+        if: env.DATABASE_URL != ''
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run database migrations
+        if: env.DATABASE_URL != ''
+        run: pnpm db:migrate
+
+      - name: Run E2E smoke checks
+        if: env.DATABASE_URL != ''
+        run: pnpm test:e2e:smoke
+
+      - name: Upload Playwright report
+        if: failure() && env.DATABASE_URL != ''
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 3

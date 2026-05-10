@@ -16,6 +16,10 @@ public/uploads/
 
 # testing
 coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
 
 # environment
 .env

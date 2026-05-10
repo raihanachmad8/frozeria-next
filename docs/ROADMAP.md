@@ -1,6 +1,6 @@
 # Roadmap
 
-Current version: `v0.8.0`
+Current version: `v0.9.0`
 
 Final target: `v1.0.0` no later than `2026-05-10`
 
@@ -16,6 +16,7 @@ Final target: `v1.0.0` no later than `2026-05-10`
 | `v0.6.0` | `2026-05-09` | Photo upload |
 | `v0.7.0` | `2026-05-10` | Help and demo polish |
 | `v0.8.0` | `2026-05-10` | CI and deployment |
+| `v0.9.0` | `2026-05-10` | Final hardening |
 | `v1.0.0` | `2026-05-10` | Demo release |
 
 ## Work Tracking Flow
@@ -35,3 +36,6 @@ Roadmap -> GitHub Milestone -> GitHub Issue -> feature branch -> dev -> main -> 
 - [ ] Connect the repository to Vercel.
 - [ ] Configure Vercel environment variables.
 - [ ] Verify preview and production deployments.
+- [x] Add final smoke E2E checks.
+- [x] Add server-side logger helper.
+- [x] Add PDF requirements checklist.

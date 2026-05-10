@@ -5,10 +5,10 @@ import {
   countDashboardItems,
   countDashboardLowStockItems,
   countDashboardOutOfStockItems,
-} from "../repositories/dashboard.repository";
-import { getDashboardSummary } from "./dashboard-summary.service";
+} from "@/server/modules/dashboard/repositories/dashboard.repository";
+import { getDashboardSummary } from "@/server/modules/dashboard/services/dashboard-summary.service";
 
-vi.mock("../repositories/dashboard.repository", () => ({
+vi.mock("@/server/modules/dashboard/repositories/dashboard.repository", () => ({
   countDashboardItems: vi.fn(),
   countDashboardCategories: vi.fn(),
   countDashboardLowStockItems: vi.fn(),

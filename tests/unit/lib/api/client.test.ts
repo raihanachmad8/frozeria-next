@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { apiGet, apiPost, ApiClientError } from "./client";
+import { apiGet, apiPost, ApiClientError } from "@/lib/api/client";
 
 function mockFetch(payload: unknown, init: ResponseInit = {}) {
   const fetchMock = vi.fn().mockResolvedValue(

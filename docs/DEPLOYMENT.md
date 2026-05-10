@@ -37,7 +37,7 @@ Add these variables in Vercel Project Settings. Use different values for Preview
 
 ```env
 NEXT_PUBLIC_APP_NAME=Frozeria Stok
-NEXT_PUBLIC_APP_VERSION=0.8.0
+NEXT_PUBLIC_APP_VERSION=0.9.0
 
 NEXT_PUBLIC_PARTICIPANT_NAME=
 NEXT_PUBLIC_PARTICIPANT_STUDENT_ID=
@@ -64,6 +64,17 @@ S3_FORCE_PATH_STYLE=true
 ```
 
 Do not store real values in `.env.example`, README, issues, pull requests, or build logs.
+
+## GitHub Actions
+
+CI is a quality gate only. Deployment is handled by Vercel Git integration.
+
+Current checks:
+
+- `Quality checks`: installs dependencies and runs `pnpm release:check`.
+- `E2E smoke checks`: runs Playwright browser smoke tests when the repository secret `E2E_DATABASE_URL` is configured.
+
+Use a separate Neon test database URL for `E2E_DATABASE_URL`. Do not point this secret to the production database. The E2E job runs migrations before testing because the browser smoke tests create temporary category and item data through the API.
 
 ## Database Migration
 
@@ -99,6 +110,7 @@ Expected result:
 - Item create, edit, detail, delete, and photo upload work.
 - Category create, edit, and delete work.
 - Help page displays participant identity from Vercel environment variables.
+- `pnpm test:e2e:smoke` passes against the configured demo environment.
 - Ready health check is successful.
 - `main` deployment is opened and smoke-tested after merge.
 
