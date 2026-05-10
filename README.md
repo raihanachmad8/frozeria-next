@@ -193,7 +193,8 @@ Deployment uses Vercel Git integration:
 
 - `dev` creates a preview deployment.
 - `main` creates the production deployment.
-- GitHub Actions runs `pnpm release:check` as a quality gate.
+- GitHub Actions runs `pnpm release:check` as the baseline quality gate.
+- GitHub Actions runs Playwright smoke E2E checks when the `E2E_DATABASE_URL` repository secret is configured.
 
 See [Deployment Guide](docs/DEPLOYMENT.md) for environment variables, migration steps, health checks, and release checklist.
 
