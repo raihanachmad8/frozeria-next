@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { randomUUID } from "node:crypto";
 import { ZodError } from "zod";
 
 import type { ApiErrorDetails } from "@/commons/types";
@@ -13,6 +14,14 @@ interface HandleApiOptions {
   request?: NextRequest;
 }
 
+interface ApiRouteContext extends Record<string, unknown> {
+  durationMs: number;
+  method?: string;
+  pathname?: string;
+  requestId: string;
+  status: number;
+}
+
 function zodErrorDetails(error: ZodError): ApiErrorDetails {
   return error.issues.reduce<ApiErrorDetails>(
     (details, issue) => {
@@ -25,7 +34,8 @@ function zodErrorDetails(error: ZodError): ApiErrorDetails {
 }
 
 export async function handleApi<T>(handler: () => Promise<T> | T, options?: HandleApiOptions) {
-  const requestId = options?.request?.headers.get("x-request-id")?.trim() || undefined;
+  const startedAt = Date.now();
+  const requestId = options?.request?.headers.get("x-request-id")?.trim() || randomUUID();
   const routeContext = options?.request
     ? {
         method: options.request.method,
@@ -34,32 +44,43 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
       }
     : { requestId };
 
+  function buildLogContext(status: number): ApiRouteContext {
+    return {
+      ...routeContext,
+      status,
+      durationMs: Date.now() - startedAt,
+    };
+  }
+
   try {
     const result = await handler();
 
     if (isApiHandlerResult<T>(result)) {
-      return dataResponse(result.data, {
+      const response = dataResponse(result.data, {
         status: options?.status,
         message: options?.message,
         requestId,
         pagination: result.pagination,
       });
+
+      logger.info("API request completed.", buildLogContext(response.status));
+      return response;
     }
 
-    return dataResponse(result, { status: options?.status, message: options?.message, requestId });
+    const response = dataResponse(result, { status: options?.status, message: options?.message, requestId });
+    logger.info("API request completed.", buildLogContext(response.status));
+    return response;
   } catch (error) {
     if (error instanceof AppError) {
       if (error.status >= 500) {
         logger.error("API request failed with application error.", {
-          ...routeContext,
-          status: error.status,
+          ...buildLogContext(error.status),
           code: error.code,
           error,
         });
       } else {
         logger.warn("API request failed with application error.", {
-          ...routeContext,
-          status: error.status,
+          ...buildLogContext(error.status),
           code: error.code,
         });
       }
@@ -75,8 +96,7 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
 
     if (error instanceof ZodError) {
       logger.warn("API request validation failed.", {
-        ...routeContext,
-        status: 422,
+        ...buildLogContext(422),
         issues: error.issues.map((issue) => ({
           path: issue.path.join(".") || "body",
           message: issue.message,
@@ -93,8 +113,7 @@ export async function handleApi<T>(handler: () => Promise<T> | T, options?: Hand
     }
 
     logger.error("API request failed with unexpected error.", {
-      ...routeContext,
-      status: 500,
+      ...buildLogContext(500),
       error,
     });
 
