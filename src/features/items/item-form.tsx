@@ -61,7 +61,7 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
       categoryId: item?.categoryId ?? null,
       stock: item?.stock ?? 0,
       minimumStock: item?.minimumStock ?? 20,
-      unit: item?.unit ?? "pcs",
+      unit: item?.unit,
       packageSize: item?.packageSize ?? null,
       purchasePrice: item?.purchasePrice ?? 0,
       sellingPrice: item?.sellingPrice ?? 0,
@@ -199,9 +199,11 @@ export function ItemForm({ formId, item, categories, categoriesLoading, onUpload
           rules={[{ required: true, message: ITEM_FORM_COPY.categoryRequired }]}
         >
           <Select
+            showSearch
             loading={categoriesLoading}
             placeholder={ITEM_FORM_COPY.categoryPlaceholder}
             options={categories.map((category) => ({ label: category.name, value: category.id }))}
+            optionFilterProp="label"
           />
         </Form.Item>
 

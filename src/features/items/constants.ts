@@ -35,7 +35,7 @@ export const ITEM_FORM_COPY = {
   stockLabel: "Jumlah stok",
   minimumStockLabel: "Stok minimum",
   unitLabel: "Satuan",
-  unitPlaceholder: "Contoh: pcs, pack, box",
+  unitPlaceholder: "Pilih satuan",
   packageSizeLabel: "Berat / ukuran",
   packageSizePlaceholder: "Contoh: 500 gram",
   purchasePriceLabel: "Harga beli (Rp)",
