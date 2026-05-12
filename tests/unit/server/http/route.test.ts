@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
+import { NextRequest } from "next/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 import { logger } from "@/server/logger";
@@ -15,14 +16,33 @@ vi.mock("@/server/logger", () => ({
 }));
 
 describe("handleApi", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("wraps successful handler results", async () => {
-    const response = await handleApi(() => ({ ok: true }), { message: "OK" });
+    const request = new NextRequest("https://frozeria.test/api/v1/items?page=1", {
+      headers: { "x-request-id": "request-id" },
+    });
+    const response = await handleApi(() => ({ ok: true }), { message: "OK", request });
 
     await expect(response.json()).resolves.toMatchObject({
       success: true,
       message: "OK",
       data: { ok: true },
+      meta: { request_id: "request-id" },
     });
+    expect(response.headers.get("x-request-id")).toBe("request-id");
+    expect(logger.info).toHaveBeenCalledWith(
+      "API request completed.",
+      expect.objectContaining({
+        durationMs: expect.any(Number),
+        method: "GET",
+        pathname: "/api/v1/items",
+        requestId: "request-id",
+        status: 200,
+      }),
+    );
   });
 
   it("returns application errors and logs them", async () => {
@@ -36,7 +56,10 @@ describe("handleApi", () => {
       message: "Not found",
       errors: { code: "NOT_FOUND" },
     });
-    expect(logger.warn).toHaveBeenCalledWith("API request failed with application error.", expect.objectContaining({ status: 404 }));
+    expect(logger.warn).toHaveBeenCalledWith(
+      "API request failed with application error.",
+      expect.objectContaining({ durationMs: expect.any(Number), requestId: expect.any(String), status: 404 }),
+    );
   });
 
   it("returns validation errors for Zod failures", async () => {
@@ -50,7 +73,10 @@ describe("handleApi", () => {
         name: expect.any(Array),
       },
     });
-    expect(logger.warn).toHaveBeenCalledWith("API request validation failed.", expect.objectContaining({ status: 422 }));
+    expect(logger.warn).toHaveBeenCalledWith(
+      "API request validation failed.",
+      expect.objectContaining({ durationMs: expect.any(Number), requestId: expect.any(String), status: 422 }),
+    );
   });
 
   it("returns internal server errors for unexpected failures", async () => {
@@ -64,6 +90,9 @@ describe("handleApi", () => {
       message: "An unexpected error occurred. Please try again later.",
       errors: { code: "INTERNAL_SERVER_ERROR" },
     });
-    expect(logger.error).toHaveBeenCalledWith("API request failed with unexpected error.", expect.objectContaining({ status: 500 }));
+    expect(logger.error).toHaveBeenCalledWith(
+      "API request failed with unexpected error.",
+      expect.objectContaining({ durationMs: expect.any(Number), requestId: expect.any(String), status: 500 }),
+    );
   });
 });
